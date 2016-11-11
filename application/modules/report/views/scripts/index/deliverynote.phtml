@@ -1,0 +1,177 @@
+<?php 
+$tr=Application_Form_FrmLanguages::getCurrentlanguage();
+?>
+<title><?php echo $tr->translate("DELIVERY REPORT");?></title>
+<div class="row">
+	<div class="col-md-12">
+		<div class="portlet box blue">
+			<div class="portlet-title">
+				<div class="caption">
+					<i class="fa fa-globe"></i><?php echo $tr->translate("DELIVERY REPORT");?>
+				</div>
+						<div class="btn-group pull-right">
+							 <button type="button" class="btn btn-success dropdown-toggle" data-toggle="dropdown" data-hover="dropdown" data-delay="1000" data-close-others="true" aria-expanded="false">
+							   Actions <i class="fa fa-angle-down"></i>
+							 </button>
+								<ul class="dropdown-menu" role="menu">
+									<li>
+										<a href="#" onclick="doPrint();">
+											<i class="fa fa-print" aria-hidden="true"></i>&nbsp;&nbsp;បោះពុម្ភ/Print
+										</a>
+									</li>
+									
+								</ul>
+					</div>
+			</div>
+            <div class="portlet-body form frmfilter">
+					<div style="clear:both;"></div>	
+	<div style=" min-height:28cm; margin:0 auto; border: 1px dotted #ccc; padding:0px 0.2cm">
+	<div id="divPrint" style="width: 100%;">
+	<style>
+		.style{
+			line-height: 20px;font-size: 9px !important;
+			font-family: 'Khmer OS Battambang';
+		}
+		ul{margin: 0;padding:0;}
+		table tr td ul li{text-align: center;list-style: none;line-height: 25px; font-weight: bold;}
+		th{padding: 5px;}
+		ul.pur_info li{line-height:18px; 
+				font-weight: normal !important;}
+		ul.pur_info li strong{font-weight: bold;}
+       .hover:hover{background: #ccc;}
+	</style>
+		<table style="font-family: 'Khmer OS Content'; width:100%;">
+			<tbody>
+			<tr>
+		    	<td align="center">
+		        	<table width="100%" style="font-family: 'Khmer OS Battambang';" cellpadding="0" cellpadding="0" >
+		            	<tbody><tr>
+		                	<td width="40%" valign="top" style="text-align:left; font-size:18px; font-family:'Khmer MEF2'">សូរ៉ា ហាងលក់សម្ភារៈអគ្គិសនី</td>
+		                	<td width="20%" valign="top">   		
+		                	</td>
+		                    <td width="40%"></td>
+		                </tr> 
+		                <tr>
+		                	<td colspan="3" valign="top">
+		                		<table width="100%" cellpadding="0" cellspacing="0">
+		                			<tbody>
+		                			<tr style="display">
+		                				<td style="font-size: 11px;">
+		                				    <span style="white-space: nowrap;font-family:'Khmer MEF2';font-size:14px;"><u>របាយការណ៏ប្រគល់ទំនិញ  DELIVERY REPORT</ul><?php //echo $tr->translate("ADDRESS_COMPANY");?></span>
+		                				</td>
+		                				<td ></td>
+		                				<td></td>
+		                			</tr>
+		                			<tr>
+		                				<td style="font-size: 11px;" valign="top" width="35%;">
+		                				<div style="width:100%; background: #244456;display: block;color:#fff;">&nbsp;&nbsp;Customer Info</div>
+		                				   <ul class='pur_info'>
+			                					<li style="text-align: left;"><strong>ឈ្មោះក្រុមហ៊ុន / Company Name : </strong><?php echo $this->product[0]['customer_name'];?></li>
+			                					<li style="text-align: left;"><strong>ឈ្មោះអ្នកទំនាក់ទំនង / Contact Person : </strong><?php echo $this->product[0]['contact_name'];?></li>
+			                					<li style="text-align: left;"><strong>លេខទូរសព្ទ / Contact Number : </strong><?php echo $this->product[0]['phone'];?></li>
+			                					<li style="text-align: left;"><strong>សារអេឡិចត្រូនិច / Email : </strong><?php echo $this->product[0]['email'];?></li>
+			                					<li style="text-align: left;"><strong>អាសយដ្ឋាន /  Address: </strong><?php echo $this->product[0]['add_name'];?></li>
+		                					</ul>
+		                				</td>
+		                				<td width="30%"></td>
+		                				<td width="35%" style="text-align: left;font-size: 11px;">
+		                					<ul class='pur_info'>
+			                					<li style="text-align: left;"><strong>សាខា​ / Location : </strong><?php echo $this->product[0]['branch_name'];?></li>
+			                					<li style="text-align: left;"><strong>កាលបរិច្ឆេទ / Date : </strong><?php echo date("d/m/Y",strtotime($this->product[0]['deli_date']));?></li>
+		                						<li style="text-align: left;"><strong>លេខ /  Quote No. : </strong><?php //echo date("d/m/Y",strtotime($this->product[0]['date_sold']));?></li>
+		                						<li style="text-align: left;"><strong>លេខវិក្កយប័ត្រ / Invoice No. : </strong><?php echo $this->product[0]['invoice_no'];?></li>
+			                			    </ul>
+		                				</td>
+		                			</tr>
+				                </tbody></table>
+				              </td>
+				           </tr>   
+		            </tbody></table>
+		        </td>
+		    </tr>
+		    <tr>
+		    	<td id="exportExcel"><br />
+		            <table border="1" style="border-collapse:collapse;border:1px solid #000; font-size:10px;" width="100%" cellspacing="0">
+		                 <tbody>
+						<tr bgcolor="#ccc" class="style" align="center" style="font-weight:bold; line-height: 20px; font-size:12px; padding:1px 0px; white-space: nowrap; ">
+		                    <td>&nbsp;<?php echo $tr->translate("NUM");?></td>
+							<td><?php echo $tr->translate("PRODUCT_DISCRIPTION");?></td>
+							<td>&nbsp;<?php echo $tr->translate("MODEL");?></td>
+							<td width="10%">&nbsp;<?php echo $tr->translate("SERIAL_NUM");?></td>
+							<td>&nbsp;<?php echo $tr->translate("QTY");?></td>
+		                </tr>
+		                <?php $num=1; 
+		                $r_netotal = 0;$r_paid = 0; $r_balance = 0;
+		                $d_netotal = 0;$d_paid = 0; $d_balance = 0;
+		                $b_netotal = 0;$b_paid = 0; $b_balance = 0;
+		                if(!empty($this->product))foreach ($this->product AS $index => $rs){?>
+						<tr class='row-format<?php echo $num; $num=1-$num;?> hover' style="border:1px solid #000;">
+						   <td align="center" style="white-space: nowrap;">&nbsp;<?php echo $index+1?></td>
+						   <td style="white-space: nowrap;">&nbsp;<?php echo $rs["item_name"];?></td>
+						   <td style="white-space: nowrap;">&nbsp;<?php echo $rs["model_name"];?></td>
+						   <td>&nbsp;<?php echo $rs["serial_number"];?></td>
+						   <td style="white-space: nowrap;">&nbsp;<?php echo number_format($rs["qty_order"],2);?>​ <?php //echo number_format(($rs["qty_detail"]),0).$rs['unit_label'];?></td>
+						   
+						</tr>
+						   <?php 
+                    }?>
+						<tr style="border:1px solid #fff; border-bottom:1px solid #000;">
+						   <td  style="white-space: nowrap;" colspan="5">&nbsp;សម្គាល់ Remark : 
+						         <ul class='pur_info'>
+			                		<li style="text-align: left;">អតិថិជនត្រូវពិនិត្យទំនិញទាំងអស់អោយបានត្រឹមត្រូវមុននឹងចុះហត្ថលេខា</li>
+									<li style="text-align: left;">យើងខ្ញុំ មិនទទួលខុសត្រូវរាល់ទំនិញខូចខាត ឫបាត់បង់ក្រោយទំនិញខាងលើត្រូវបានប្រគល់រួច។</li>
+									<li style="text-align: left;">Please carefully check the above product(s), We are not responible for product(s) demaged or loss.</li>
+									<li style="text-align: left;"></li>
+			                	</ul>
+						   </td> 
+						</tr>
+						<tr class='row-format<?php echo $num; $num=1-$num;?> hover' style="border:1px solid #000;">
+						   <td align="center" style="white-space: nowrap;" colspan="5">ឯកភាព និងយល់ព្រមដោយ ACCEPTED BY</td> 
+						</tr>
+		                </tbody>
+		           </table>
+		              <table align="center" width="100%">
+						   <tbody>
+						   <tr style="font-size: 11px;">
+						        <td style="width:20%;text-align:center;  font-family:'Khmer MEF2'; white-space: nowrap;">អ្នកកាន់ឃ្លាំង  / Stock Controller</td>
+						        <td></td>
+						        <td style="width:20%;text-align:center; font-family:'Khmer MEF2';white-space: nowrap;">អ្នកដឹក  / Delivery Man</td>
+						        <td></td>
+						        <td style="width:20%;text-align:center;font-family:'Khmer MEF2';white-space: nowrap;">អតិថិជន  /​ Customer</td>
+						   </tr>
+						   <tr style="font-size: 11px; height: 75px;">
+						        <td valign="bottom" style="width:20%;text-align:center;  font-family:'Khmer MEF2'; white-space: nowrap;">ឈ្មោះ  /Name--------------------------</td>
+						        <td></td>
+						        <td valign="bottom" style="width:20%;text-align:center; font-family:'Khmer MEF2';white-space: nowrap;">ឈ្មោះ  /Name--------------------------</td>
+						        <td></td>
+						        <td valign="bottom" style="width:20%;text-align:center;font-family:'Khmer MEF2';white-space: nowrap;">ឈ្មោះ  /Name--------------------------</td>
+						   </tr>
+						   <tr style="font-size: 11px;">
+						        <td style="width:20%;text-align:center;white-space: nowrap;">ថ្ងៃ  /Date:----------------------------------</td>
+						        <td></td>
+						        <td style="width:20%;text-align:center;white-space: nowrap;">ថ្ងៃ  /Date:----------------------------------</td>
+						        <td></td>
+						        <td style="width:20%;text-align:center;white-space: nowrap;">ថ្ងៃ  /Date:----------------------------------</td>
+						   </tr>
+						</tbody>
+					</table>	
+		    		</td>
+		    	</tr>
+			</tbody>
+		</table>
+		</div>
+	  </div>		
+	</div>
+	 </div>
+   </div>
+</div>
+<iframe name=print_frame width=0 height=0 frameborder=0 src=about:blank></iframe>
+<script>
+function doPrint() {
+	window.frames["print_frame"].document.body.innerHTML=document.getElementById('divPrint').innerHTML;
+    window.frames["print_frame"].window.focus();
+    window.frames["print_frame"].window.print();
+    //hideDialog();
+}
+
+</script>
