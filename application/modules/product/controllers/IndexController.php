@@ -222,6 +222,12 @@ public function init()
     	$this->view->formFilter = $formFilter->productFilter();
     	Application_Model_Decorator::removeAllDecorator($formFilter);
 	}
-	
+	public function getProductPrefixAction(){
+		$post=$this->getRequest()->getPost();
+		$get_code = new Product_Model_DbTable_DbProduct();
+		$result = $get_code->getProductPrefix($post["id"]);
+		echo Zend_Json::encode($result);
+		exit();
+	}
 }
 

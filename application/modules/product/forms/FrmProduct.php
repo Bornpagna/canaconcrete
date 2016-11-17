@@ -71,7 +71,7 @@ class Product_Form_FrmProduct extends Zend_Form
 		$category = new Zend_Form_Element_Select("category");
 		$category->setAttribs(array(
 				'class'=>'form-control select2me',
-				'onChange'=>'getPopupCategory()',
+				'onChange'=>'getPopupCategory();getProductPrefix();',
 				//'required'=>'required'
 		));
 		$row_cat = $db->getCategory();

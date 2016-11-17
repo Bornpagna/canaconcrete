@@ -678,5 +678,23 @@ class Product_Model_DbTable_DbProduct extends Zend_Db_Table_Abstract
 		$rows = $db->fetchAll($sql);
 		return $rows;
 	}
+	function getProductPrefix($id){
+		$db=$this->getAdapter();
+		$sql="SELECT prefix FROM `tb_category` WHERE id=$id ";
+		$row=$db->fetchOne($sql);
+
+		$sql_p="SELECT id FROM `tb_product` WHERE cate_id=$id ORDER BY id DESC LIMIT 1";
+		$rowp=$db->fetchOne($sql_p);
+		
+		$p_code=$rowp+1;
+		$acc_no= strlen((int)$rowp+1);
+		
+		$pre = $row;
+		for($i = $acc_no;$i<4;$i++){
+			$pre.='0';
+		}
+		return $pre.$p_code;
+	}
+	
     
 }

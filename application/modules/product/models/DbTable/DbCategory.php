@@ -15,6 +15,7 @@ class Product_Model_DbTable_DbCategory extends Zend_Db_Table_Abstract
 				'date'			=>	new Zend_Date(),
 				'status'		=>	$data["status"],
 				'remark'		=>	$data["remark"],
+				'prefix'		=>	$data["prifix"],
 		);
 		$this->_name = "tb_category";
 		$this->insert($arr);
@@ -27,6 +28,7 @@ class Product_Model_DbTable_DbCategory extends Zend_Db_Table_Abstract
 				'date'			=>	new Zend_Date(),
 				'status'		=>	$data["status"],
 				'remark'		=>	$data["remark"],
+				'prefix'		=>	$data["prifix"],
 		);
 		$this->_name = "tb_category";
 		$where = $db->quoteInto("id=?", $data["id"]);
@@ -55,7 +57,7 @@ class Product_Model_DbTable_DbCategory extends Zend_Db_Table_Abstract
 	
 	public function getCategory($id){
 		$db = $this->getAdapter();
-		$sql = "SELECT c.id,c.`name`,c.`parent_id`,c.`remark`,c.`status` FROM `tb_category` AS c WHERE c.`id`= $id";
+		$sql = "SELECT c.id,c.`name`,c.`parent_id`,c.`remark`,c.`status`,c.`prefix` FROM `tb_category` AS c WHERE c.`id`= $id";
 		return $db->fetchRow($sql);
 	}
 }

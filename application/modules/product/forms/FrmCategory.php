@@ -15,6 +15,14 @@ class Product_Form_FrmCategory extends Zend_Form
 				'class'=>'form-control',
 				'required'=>'required'
 		));
+		
+		$db = new Category_Model_DbTable_DbCategory();
+		$tr = Application_Form_FrmLanguages::getCurrentlanguage();
+		$prifix = new Zend_Form_Element_Text('prifix');
+		$prifix->setAttribs(array(
+				'class'=>'form-control',
+				'required'=>'required'
+		));
 		 
 		$parent = new Zend_Form_Element_Select("parent");
 		$parent->setAttribs(array(
@@ -47,9 +55,10 @@ class Product_Form_FrmCategory extends Zend_Form
 			$parent->setValue($data["parent_id"]);
 			$remark->setValue($data["remark"]);
 			$status->setValue($data["status"]);
+			$prifix->setValue($data["prefix"]);
 		}
 			
-		$this->addElements(array($parent,$name,$status,$remark));
+		$this->addElements(array($parent,$name,$status,$remark,$prifix));
 		return $this;
 	}
 	
