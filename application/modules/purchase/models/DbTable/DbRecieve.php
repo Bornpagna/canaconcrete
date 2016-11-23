@@ -7,13 +7,149 @@ class Purchase_Model_DbTable_DbRecieve extends Zend_Db_Table_Abstract
 		$sql="";
 		//return $db-
 	}
-	
+	protected function GetuserInfo(){
+		$user_info = new Application_Model_DbTable_DbGetUserInfo();
+		$result = $user_info->getUserInfo();
+		return $result;
+	}
 	function getAllPuCode(){
 		$db = $this->getAdapter();
 		$sql="SELECT p.id,p.`order_number` FROM `tb_purchase_order` AS p WHERE p.`status`=1 AND p.`is_recieved`=0";
 		return $db->fetchAll($sql);
 	}
+	function getVendorByPuId($id){
+		$db = $this->getAdapter();
+		$sql="SELECT 
+			  v.`v_name`,
+			  v.`v_phone`,
+			  v.`contact_name`,
+			  v.`phone_person`,
+			  v.`vendor_id`,
+			  v.`email`,
+			  v.`is_over_sea`,
+			  v.`add_name`,
+			  v.`vendor_id`,
+			  p.`branch_id` ,
+			  DATE_FORMAT(p.`date_order`,'%m/%d/%Y') AS date_order,
+			  DATE_FORMAT(p.`date_in`,'%m/%d/%Y') AS date_in,
+			  p.`payment_method`,
+			  p.`currency_id`,
+			  p.`discount_value`,
+			  p.`discount_real`,
+			  p.`all_total`,
+			  p.`tax`,
+			  p.`net_total`,
+			  p.`paid`,
+			  p.`balance`,
+			  (SELECT pl.`name` FROM `tb_sublocation` AS pl WHERE pl.id=p.`branch_id`) AS location
+			FROM
+			  `tb_vendor` AS v,
+			  `tb_purchase_order` AS p 
+			WHERE p.`vendor_id` = v.`vendor_id` 
+			  AND p.`id` = $id";
+		return $db->fetchRow($sql);
+	}
 	
+	function getItemByPuId($id){
+		$db = $this->getAdapter();
+		$sql="SELECT p.`pro_id`,p.`qty_order`,pd.`item_name`,p.`price`,p.`sub_total`,p.`disc_value` FROM `tb_purchase_order_item` AS p ,`tb_product` AS  pd WHERE p.`pro_id`=pd.`id` AND p.`purchase_id`=$id";
+		return $db->fetchAll($sql);
+	}
+	
+	function getRecieveCode(){
+		$db = $this->getAdapter();
+		$user = $this->GetuserInfo();
+		$location = $user['branch_id'];
+		
+		$sql_pre = "SELECT pl.`prefix` FROM `tb_sublocation` AS pl WHERE pl.`id`=$location";
+		$prefix = $db->fetchOne($sql_pre);
+		
+		$sql="SELECT r.`order_id` FROM `tb_recieve_order` AS r WHERE r.`LocationId`=$location ORDER BY r.`order_id` DESC LIMIT 1";
+		$num = $db->fetchOne($sql);
+		
+		$num_lentgh = strlen((int)$num+1);
+		$num = (int)$num+1;
+		$pre = $prefix."RP";
+		for($i=$num_lentgh;$i<4;$i++){
+			$pre.="0";
+		}
+		return $pre.$num;
+	}
+	
+	function  add($data){
+		$db = $this->getAdapter();
+		$db->beginTransaction();
+		
+		try{
+			$identity = $data["identity"];
+			if($identity!=""){
+				$orderdata = array(
+					'purchase_id'		=>	$data["pu_code"],
+					"vendor_id"      	=> 	$data['v_name'],
+					"LocationId"     	=> 	$data["branch"],
+					"recieve_number" 	=> 	$data["recieve_no"],
+					"date_order"     	=> 	$data['date_order'],
+					"date_in"     		=> 	$data['date_in'],
+					"purchase_status"   => 	1,
+					"payment_method" 	=> 	$data['payment_name'],
+					"currency_id"    	=> 	$data['currency'],
+					"remark"         	=> 	$data['remark'],
+					"all_total"      	=> 	$data['totalAmoun'],
+					"all_total_after"   => 	$data['totalAmoun'],
+					"tax"				=>	$data["total_tax"],
+					"discount_value" 	=> 	$data['dis_value'],
+					"discount_real"  	=> 	$data['global_disc'],
+					"net_total"      	=> 	$data['all_total'],
+					"net_total_after"   => 	$data['all_total'],
+					"paid"           	=> 	$data['paid'],
+					"balance"        	=> 	$data['remain'],
+					"user_mod"       	=> 	$GetUserId,
+					"date"      		=> 	new Zend_Date(),
+				);
+				
+				$this->_name='tb_recieve_order';
+				$recieved_order = $this->insert($orderdata);
+				
+				$ids=explode(',',$data['identity']);
+				$locationid=$data['branch'];
+				foreach ($ids as $i){
+					$recieved_item = array(
+							'recieve_id'	  	=> 	$recieved_order,
+							'pro_id'	  		=> 	$data['item_id_'.$i],
+							'qty_order'	  		=> 	$data['qty_order_'.$i],
+							'qty_receive'	  	=> 	$data['qty_recieve_'.$i],
+							//'qty_detail'  		=> 	$data['qty_per_unit_'.$i],
+							'price'		  		=> 	$data['price'.$i],
+							'disc_value'	  	=> $data['real-value'.$i],
+							'sub_total'	  		=> $data['total'.$i],
+							'sub_total_after'	=> $data['total'.$i],
+							'remark'			=>	$data["remark_".$i]
+					);
+					$this->_name="tb_recieve_order_item";
+					$this->insert($recieved_item);
+					unset($recieved_item);
+					$rows=$this->productLocationInventory($data['item_id_'.$i], $locationid);//check stock product location
+					if($rows)
+					{
+						if($data["status"]==4 OR $data["status"]==5){
+							$datatostock   = array(
+									'qty'   			=> 		$rows["qty"]+$data['qty'.$i],
+									'last_mod_date'		=>		date("Y-m-d"),
+									'last_mod_userid'	=>		$GetUserId
+							);
+							$this->_name="tb_prolocation";
+							$where=" id = ".$rows['id'];
+							$this->update($datatostock, $where);
+						}
+					}
+				}
+			}
+			$db->commit();
+		}catch(Exception $e){
+			$db->rollBack();
+			$err =$e->getMessage();
+			Application_Model_DbTable_DbUserLog::writeMessageError($err);			}
+	}
 	function getAllReceivedOrder($search){
 		$db = $this->getAdapter();
 		$sql=" SELECT ro.order_id ,ro.recieve_number ,

@@ -19,7 +19,7 @@ class Purchase_ReceiveController extends Zend_Controller_Action
 			}else{
 				$search= array();
 			}
-			$db = new Purchase_Model_DbTable_DbRecieveOrder();
+			$db = new Purchase_Model_DbTable_DbRecieve();
 			$rows = $db->getAllReceivedOrder($search);
 			$glClass = new Application_Model_GlobalClass();
 			$columns=array("PURCHASE_ORDER_CAP","ORDER_DATE_CAP", "VENDOR_NAME_CAP","TOTAL_CAP_DOLLAR","BY_USER_CAP");
@@ -37,9 +37,46 @@ class Purchase_ReceiveController extends Zend_Controller_Action
 			Application_Model_Decorator::removeAllDecorator($formFilter);
 	}
 	public function addAction(){
-		if($this->getRequest()->getPost()){
-			$db = new Application_Model_DbTable_DbGlobal();
-			
+		
+		if($this->getRequest()->isPost()){
+			try{
+				$data = $this->getRequest()->getPost();
+				$db = new Purchase_Model_DbTable_DbRecieve();
+				$db->add($data);
+				if(isset($data["save_close"])){
+					Application_Form_FrmMessage::Sucessfull("INSERT_SUCCESS", "/purchase/receive");
+				}else{
+					Application_Form_FrmMessage::message('INSERT_SUCCESS');
+				}
+			}catch (Exception $e){
+				Application_Form_FrmMessage::message('INSERT_FAIL');
+				$err =$e->getMessage();
+				Application_Model_DbTable_DbUserLog::writeMessageError($err);
+			}
+		}
+		
+		$frm_purchase = new Purchase_Form_FrmRecieve(null);
+		$form_add_purchase = $frm_purchase->add(null);
+		Application_Model_Decorator::removeAllDecorator($form_add_purchase);
+		$this->view->form_purchase = $form_add_purchase;
+	}
+	public function getPurchaseVendorAction(){		
+		if($this->getRequest()->isPost()){
+		    $db= new Purchase_Model_DbTable_DbRecieve();
+			$post=$this->getRequest()->getPost();
+			$result= $db->getVendorByPuId($post["id"]);
+			echo Zend_Json::encode($result);
+			exit();
+		}
+		
+	}
+	public  function getPurchaseItemAction(){
+		if($this->getRequest()->isPost()){
+		    $db= new Purchase_Model_DbTable_DbRecieve();
+			$post=$this->getRequest()->getPost();
+			$result= $db->getItemByPuId($post["id"]);
+			echo Zend_Json::encode($result);
+			exit();
 		}
 	}
 	public function getPurchaseidAction(){		
