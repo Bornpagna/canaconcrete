@@ -11,9 +11,11 @@ class Purchase_Model_DbTable_DbPurchaseOrder extends Zend_Db_Table_Abstract
 		order_number,date_order,date_in,
 		(SELECT symbal FROM `tb_currency` WHERE id= currency_id limit 1) As curr_name,
 		net_total,paid,balance,
+		purchase_status AS p_status,
 		(SELECT name_en FROM `tb_view` WHERE key_code = purchase_status AND `type`=1) As purchase_status,
 		(SELECT name_en FROM `tb_view` WHERE key_code =tb_purchase_order.status AND type=5 LIMIT 1),
-		(SELECT u.username FROM tb_acl_user AS u WHERE u.user_id = user_mod LIMIT 1 ) AS user_name
+		(SELECT u.username FROM tb_acl_user AS u WHERE u.user_id = user_mod LIMIT 1 ) AS user_name,
+		is_recieved
 		FROM `tb_purchase_order` ";
 		$from_date =(empty($search['start_date']))? '1': " date_order >= '".$search['start_date']." 00:00:00'";
 		$to_date = (empty($search['end_date']))? '1': " date_order <= '".$search['end_date']." 23:59:59'";
@@ -36,7 +38,7 @@ class Purchase_Model_DbTable_DbPurchaseOrder extends Zend_Db_Table_Abstract
 		$dbg = new Application_Model_DbTable_DbGlobal();
 		$where.=$dbg->getAccessPermission();
 		$order=" ORDER BY id DESC ";
-// 		echo $sql.$where.$order;exit();
+ 		//echo $sql.$where.$order;
 		return $db->fetchAll($sql.$where.$order);
 
 	}

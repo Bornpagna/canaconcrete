@@ -24,7 +24,9 @@ class Purchase_indexController extends Zend_Controller_Action
 					);
 		}
 		$db = new Purchase_Model_DbTable_DbPurchaseOrder();
+		
 		$rows = $db->getAllPurchaseOrder($search);
+		$this->view->rs = $rows;
 		$list = new Application_Form_Frmlist();
 		$columns=array("BRANCH_NAME","VENDOR_NAME","PURCHASE_ORDER","ORDER_DATE","DATE_IN",
 				 "CURRNECY_TYPE","TOTAL_AMOUNT","PAID","BALANCE","ORDER_STATUS","STATUS","BY_USER");
