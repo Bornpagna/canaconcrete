@@ -359,13 +359,27 @@ var baseUrl = '<?php echo BASE_URL; ?>';
 var template = '';
 var value = '';
 pqty = 1;
-var index=1;
+var index=0;
 function addRow(item_id) {
+	vendor = $('#v_name').val();
+	var inx = $('#identity').val();
+	if(vendor==""){
+		alert("Please Select Vendor First!");
+		return false;
+	}else{
+	index = inx.length;
 	index5++; //var first = index5;
-	index=index+1;
 	for(i=1; i<index5; i++){
 		new_item=parseInt(item_id);
 		items = parseInt($("#item_id_"+i).val());
+		if(new_item==items){		
+			newqty = parseInt($("#qty_unit_"+i).val());
+			newqty = newqty+1;
+			$("#qty_unit_"+i).val(newqty);
+			totalQty(i);	
+			return false;
+				
+		}
 	}
 	template='<tr id="row_order_'+index5+'" style="height:33px;">';
 	var inp = '';
@@ -408,6 +422,7 @@ function addRow(item_id) {
 		$("#paid").val(0);
 	}
 	$("#row_order_0").remove();
+	}
 }
 <?php $url_qty =  $this->url(array('module'=>'purchase','controller'=>'index','action'=>'getqtybyid')); ?>
 function getQtyById(index){//use
@@ -424,7 +439,8 @@ function getQtyById(index){//use
 						type:"post",
 						data:{'item_id':item_id},
 						success: function(data){
-							item_qty = $.parseJSON(data);			
+							item_qty = $.parseJSON(data);	
+							//alert(item_qty);
 							main_qty =$("#qty_unit_"+index).val();
 							detail_qty =  $("#qty_per_unit_"+index).val();
 							total_qty = parseFloat(main_qty) + parseFloat(detail_qty/(item_qty.qty_perunit));

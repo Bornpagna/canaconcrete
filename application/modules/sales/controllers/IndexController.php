@@ -56,9 +56,9 @@ class Sales_IndexController extends Zend_Controller_Action
 				if(!empty($data['identity'])){
 					$dbq->addSaleOrder($data);
 				}
-				Application_Form_FrmMessage::message("INSERT_SUCESS");
+				//Application_Form_FrmMessage::message("INSERT_SUCESS");
 				if(!empty($data['btnsavenew'])){
-					Application_Form_FrmMessage::redirectUrl("/sales/quoatation");
+					//Application_Form_FrmMessage::redirectUrl("/sales/quoatation");
 				}
 			}catch (Exception $e){
 				Application_Form_FrmMessage::message('INSERT_FAIL');
@@ -118,7 +118,43 @@ class Sales_IndexController extends Zend_Controller_Action
 		$items = new Application_Model_GlobalClass();
 		$this->view->items = $items->getProductOption();
 		$this->view->term_opt = $db->getAllTermCondition(1);
-	}	
+	}
+
+	function addrequestAction(){
+		$db = new Application_Model_DbTable_DbGlobal();
+		if($this->getRequest()->isPost()) {
+			$data = $this->getRequest()->getPost();
+			try {
+				$dbq = new Sales_Model_DbTable_DbRequest();
+				if(!empty($data['identity'])){
+					$dbq->addRequestOrder($data);
+				}
+				//Application_Form_FrmMessage::message("INSERT_SUCESS");
+				if(!empty($data['btnsavenew'])){
+					//Application_Form_FrmMessage::redirectUrl("/sales/quoatation");
+				}
+			}catch (Exception $e){
+				Application_Form_FrmMessage::message('INSERT_FAIL');
+				$err =$e->getMessage();
+				Application_Model_DbTable_DbUserLog::writeMessageError($err);
+			}
+		}
+		///link left not yet get from DbpurchaseOrder
+		$frm_purchase = new Sales_Form_FrmRequest(null);
+		$form_sale = $frm_purchase->SaleOrder(null);
+		Application_Model_Decorator::removeAllDecorator($form_sale);
+		$this->view->form_sale = $form_sale;
+		 
+		// item option in select
+		$items = new Application_Model_GlobalClass();
+		$this->view->items = $items->getProductOption();
+		$this->view->term_opt = $db->getAllTermCondition(1);
+		
+		$formpopup = new Sales_Form_FrmCustomer(null);
+		$formpopup = $formpopup->Formcustomer(null);
+		Application_Model_Decorator::removeAllDecorator($formpopup);
+		$this->view->form_customer = $formpopup;
+	}
 	function viewappAction(){
 		$id = ($this->getRequest()->getParam('id'))? $this->getRequest()->getParam('id'): '0';
 		if(empty($id)){
@@ -152,4 +188,13 @@ class Sales_IndexController extends Zend_Controller_Action
 		}
 	}
 		
+	function getPlanAddrAction(){
+		if($this->getRequest()->isPost()){
+			$post=$this->getRequest()->getPost();
+			$db = new Sales_Model_DbTable_DbRequest();
+			$qo = $db->getPlanAddr($post['id']);
+			echo Zend_Json::encode($qo);
+			exit();
+		}
+	}
 }

@@ -371,7 +371,8 @@ function getSaleCode(){
 						data:{'id':id},
 						success: function(data){
 							value = $.parseJSON(data);
-								//$("#code").val(value);
+							alert(value);
+								$("#code").val(value);
 						},
 						error:function(e){
 							alert(e);

@@ -82,34 +82,34 @@ class Sales_Model_DbTable_DbSaleOrder extends Zend_Db_Table_Abstract
 			foreach ($ids as $i)
 			{
 				$data_item= array(
-						'saleorder_id'=> $sale_id,
-						'pro_id'	  => 	$data['item_id_'.$i],
-						'qty_unit'=>$data['qty_unit_'.$i],
-						'qty_detail'  => 	$data['qty_per_unit_'.$i],
-						'qty_order'	  => 	$data['qty'.$i],
-						'price'		  => 	$data['price'.$i],
-						'old_price'   =>    $data['current_qty'.$i],
-						'disc_value'  => $data['real-value'.$i],//check it
-						'sub_total'	  => $data['total'.$i],
+						'saleorder_id'	=> 	$sale_id,
+						'pro_id'	  	=> 	$data['item_id_'.$i],
+						'qty_unit'		=>	$data['qty_unit_'.$i],
+						'qty_detail'  	=> 	$data['qty_per_unit_'.$i],
+						'qty_order'	  	=> 	$data['qty'.$i],
+						'price'		  	=> 	$data['price'.$i],
+						'old_price'   	=>  $data['current_qty'.$i],
+						'disc_value'  	=> 	$data['real-value'.$i],//check it
+						'sub_total'	  	=> 	$data['total'.$i],
 				);
 				$this->_name='tb_salesorder_item';
 				$this->insert($data_item);
 				
-				/*$rows=$db_global ->productLocationInventory($data['item_id_'.$i], $locationid);//check stock product location
+				$rows=$this->productLocationInventory($data['item_id_'.$i], $locationid);//check stock product location
+					if($rows)
+					{
+						//if($data["status"]==4 OR $data["status"]==5){
+							$datatostock   = array(
+									'qty'   			=> 		$rows["qty"]-$data['qty'.$i],
+									'last_mod_date'		=>		date("Y-m-d"),
+									'last_mod_userid'	=>		$GetUserId
+							);
+							$this->_name="tb_prolocation";
+							$where=" id = ".$rows['id'];
+							$this->update($datatostock, $where);
+						//}
+					}
 				
-				if($rows)
-				{
-						$datatostock   = array(
-								'qty'   		=> 		$rows["qty"]-$data['qty'.$i],
-								'last_mod_date'		=>	date("Y-m-d"),
-								'last_mod_userid'=>$GetUserId
-						);
-						$this->_name="tb_prolocation";
-						$where=" id = ".$rows['id'];
-						$this->update($datatostock, $where);
-					
-				}else{
-				}*/
 			 }
 			 
 			 $ids=explode(',',$data['identity_term']);
@@ -128,7 +128,7 @@ class Sales_Model_DbTable_DbSaleOrder extends Zend_Db_Table_Abstract
 				 	$this->insert($data_item);
 				 }
 			 }
-			 
+			//exit();
 			$db->commit();
 		}catch(Exception $e){
 			$db->rollBack();
@@ -227,6 +227,38 @@ class Sales_Model_DbTable_DbSaleOrder extends Zend_Db_Table_Abstract
 			Application_Model_DbTable_DbUserLog::writeMessageError($err);
 		}
 	}
+	public function productLocationInventory($pro_id, $location_id){
+    	$db=$this->getAdapter();
+    	$sql="SELECT id,pro_id,location_id,qty,qty_warning,last_mod_date,last_mod_userid
+    	 FROM tb_prolocation WHERE pro_id =".$pro_id." AND location_id=".$location_id." LIMIT 1 "; 
+    	$row = $db->fetchRow($sql);
+    	
+    	if(empty($row)){
+    		$session_user=new Zend_Session_Namespace('auth');
+    		$userName=$session_user->user_name;
+    		$GetUserId= $session_user->user_id;
+    		
+    		$array = array(
+    				"pro_id"			=>	$pro_id,
+    				"location_id"		=>	$location_id,
+    				"qty"				=>	0,
+    				"qty_warning"		=>	0,
+    				"last_mod_userid"	=>	$GetUserId,
+    				"user_id"			=>	$GetUserId,
+    				"last_mod_date"		=>	date("Y-m-d")
+    				);
+    		$this->_name="tb_prolocation";
+    		$this->insert($array);
+    		
+    		$sql="SELECT id,pro_id,location_id,qty,qty_warning,user_id,last_mod_date,last_mod_userid
+    		FROM tb_prolocation WHERE pro_id =".$pro_id." AND location_id=".$location_id." LIMIT 1 ";
+    		return $row = $db->fetchRow($sql);
+    	}else{
+    		
+    	return $row; 
+    	}  	
+    }
+	
 	function getSaleorderItemById($id){
 		$db = $this->getAdapter();
 		$sql=" SELECT * FROM $this->_name WHERE id = $id LIMIT 1 ";

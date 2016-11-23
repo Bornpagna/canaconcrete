@@ -304,7 +304,8 @@ class Product_Model_DbTable_DbProduct extends Zend_Db_Table_Abstract
 			  p.`serial_number`,
 			  p.`size_id`,
 			  p.`status`,
-			  p.`unit_label` 
+			  p.`unit_label` ,
+			  p.`price` 
 			FROM
 			  `tb_product` AS p 
 			WHERE p.id = $id ";
@@ -359,6 +360,7 @@ class Product_Model_DbTable_DbProduct extends Zend_Db_Table_Abstract
     			'user_id'		=>	$this->getUserId(),
     			'note'			=>	$data["description"],
     			'status'		=>	$data["status"],
+				'price'			=>	$data["price"],
     		);
     		$this->_name="tb_product";
     		$id = $this->insert($arr);
@@ -427,6 +429,7 @@ class Product_Model_DbTable_DbProduct extends Zend_Db_Table_Abstract
     				'user_id'		=>	$this->getUserId(),
     				'note'			=>	$data["description"],
     				'status'		=>	$data["status"],
+					'price'			=>	$data["price"],
     		);
     		$this->_name="tb_product";
     		$where = $db->quoteInto("id=?", $data["id"]);

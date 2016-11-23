@@ -40,7 +40,7 @@ class Application_Form_purchase extends Zend_Form
     	
     	$roder_element= new Zend_Form_Element_Text("txt_order");
     	$roder_element->setAttribs(array('placeholder' => 'Optional','class'=>'validate[required] form-control',
-    			"onblur"=>"CheckPOInvoice();","required"=>true));
+    			"onblur"=>"CheckPOInvoice();"));
     	$this->addElement($roder_element);
     	
     	$contactElement = new Zend_Form_Element_Text('contact');
@@ -155,8 +155,8 @@ class Application_Form_purchase extends Zend_Form
     	$this->addElement($balancelElement);
     	
     	$statusElement = new Zend_Form_Element_Select('status');
-    	$opt_status = array(""=>"Please Select status",2=>'Open',5=>"Recieved");
-    	$statusElement ->setAttribs(array('class'=>'validate[required] form-control select2me','onchange'=>'calculatePrice();'));
+    	$opt_status = array(5=>"Recieved",2=>'Open');
+    	$statusElement ->setAttribs(array('class'=>'validate[required] form-control select2me','onchange'=>'calculatePrice();','placeholder' => 'Please Select status'));
     	$statusElement->setMultiOptions($opt_status);
     	$this->addElement($statusElement);    	
 
@@ -210,24 +210,13 @@ class Application_Form_purchase extends Zend_Form
     			$idElement = new Zend_Form_Element_Text('id');
     			$this->addElement($idElement);
     			
-    			$history_idElement->setValue($data["history_id"]);
-    			$history_date_idElement->setValue($data["date"]);
-    			
-    			$recieve_id = new Zend_Form_Element_Hidden("recieve_id");
-    			$this->addElement($recieve_id);
-    			$recieve_id->setValue($data["recieve_id"]);
-    			
-    			$oldlocationIdElement = new Zend_Form_Element_Text('old_location');
+    			$oldlocationIdElement = new Zend_Form_Element_Hidden('old_location');
     			$this->addElement($oldlocationIdElement);
     			
-    			$idElement ->setValue($data["order_id"]);
     			$date_inElement->setValue($data["date_in"]);
     			$oldStatusElement = new Zend_Form_Element_Hidden('oldStatus');
     			$this->addElement($oldStatusElement);
     			$vendor_id->setValue($data["vendor_id"]);
-    			$contactElement->setValue($data['contact_name']);
-    			$phoneElement->setValue($data['phone']);
-    			$remarkaddElement->setValue($data['add_name']);
     			
     			 if($data["status"]==1){
     			 	$statusElement->setValue("Quote");
@@ -248,17 +237,17 @@ class Application_Form_purchase extends Zend_Form
     			//$idElement->setValue($data['id']);
     			$statusElement->setValue($data["status"]);
     			$oldStatusElement->setValue($data['status']);
-    			$locationID->setvalue($data['LocationId']);
-    			$oldlocationIdElement->setvalue($data['LocationId']);
+    			$locationID->setvalue($data['branch_id']);
+    			$oldlocationIdElement->setvalue($data['branch_id']);
     			$dateOrderElement->setValue($data["date_order"]);
-    			$roder_element->setValue($data['order']);
     			$roder_element->setAttribs(array('readonly'=>'readonly'));
     			$paymentmethodElement->setValue($data['payment_method']);
     			$currencyElement->setValue($data['currency_id']);
-    			$remarkElement->setValue($data["remark"]);
     			$paidElement->setValue($data['paid']);
-    			$totalAmountElement->setValue($data["all_total"]);
+				$roder_element->setvalue($data["order_number"]);
+				$descriptionElement->setvalue($data["remark"]);
     			//$remainlElement->setvalue($data['balance']);
+				$totalAmountElement->setvalue($data["net_total"]);
     			$allTotalElement->setValue($data['all_total']);
     			$discountValueElement->setValue($data['discount_value']);
     			$netTotalElement->setValue($data['net_total']);   

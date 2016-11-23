@@ -58,8 +58,8 @@ class Sales_Model_DbTable_DbSalesAgent extends Zend_Db_Table_Abstract
 		$new_acc_no= (int)$acc_no+1;
 		$acc_no= strlen((int)$acc_no+1);
 
-		//$pre = $prefix."EID";
-		$pre = "EID";
+		$pre = $prefix."EID";
+		//$pre = "EID";
 		for($i = $acc_no;$i<4;$i++){
 			$pre.='0';
 		}
@@ -199,7 +199,8 @@ class Sales_Model_DbTable_DbSalesAgent extends Zend_Db_Table_Abstract
 				$id = $this->insert($arr);
 			}
 			
-			$sqls = "DELETE FROM `tb_acl_ubranch` WHERE `user_id`=".$data["user_id"]." AND `location_id`=".$data["branch_id"];
+			$sqls = "DELETE FROM `tb_acl_ubranch` WHERE `user_id`="."'".$data["user_id"]."'"." AND `location_id`=".$data["branch_id"];
+			echo $sqls;
 			$db->query($sqls);
 			
 			$arr_u= array(
