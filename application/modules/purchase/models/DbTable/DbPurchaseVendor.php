@@ -24,6 +24,7 @@ class purchase_Model_DbTable_DbPurchaseVendor extends Zend_Db_Table_Abstract
 			$userName=$session_user->user_name;
 			$GetUserId= $session_user->user_id;
 			$idrecord=$data['v_name'];
+			
 			if($data['txt_order']==""){
 				$date= new Zend_Date();
 				$sql = "SELECT * FROM tb_setting WHERE `code`=8";
@@ -34,6 +35,16 @@ class purchase_Model_DbTable_DbPurchaseVendor extends Zend_Db_Table_Abstract
 			else{
 				$order_add=$data['txt_order'];
 			}
+			
+			//check approved 
+			if($data['status']==5 || $data['status']==4){
+				$is_aproved=1;
+				$pen_status=2;
+			}else{
+				$is_aproved=0;
+				$pen_status=1;
+			}
+			
 			$info_purchase_order=array(
 					"vendor_id"      => 	$data['v_name'],
 					"branch_id"      => 	$data["LocationId"],
@@ -51,10 +62,15 @@ class purchase_Model_DbTable_DbPurchaseVendor extends Zend_Db_Table_Abstract
 					"net_total"      => 	$data['all_total'],
 					"paid"           => 	$data['paid'],
 					"balance"        => 	$data['remain'],
+					
+					"is_approved"    => 	$is_aproved,
+					"pending_status" => 	$pen_status,
 					"tax"			 =>     $data["total_tax"],
 					"user_mod"       => 	$GetUserId,
-					"date"      	=> 		date("Y-m-d"),
-					"status"		=>		$data["status"],
+					"date"      	 => 	date("Y-m-d"),
+					"approved_userid"=>		$GetUserId,
+					"status"		 =>		$data["status"],
+					
 			);
 			 $this->_name="tb_purchase_order";
 			$purchase_id = $this->insert($info_purchase_order); 
