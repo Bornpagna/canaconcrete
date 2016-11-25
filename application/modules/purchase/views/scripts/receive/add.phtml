@@ -318,10 +318,11 @@ function getQtyById(index){//use
 				});
 			}
 }
-/*$( document ).ready(function() {
-	alert("ready loaded");
+$( document ).ready(function() {
+	alert('hell');
+	getItem();
 });
-$( window ).load(function() {
+/*$( window ).load(function() {
     alert("load loaded");
 });*/ 
 function getItemOrder(){
@@ -674,7 +675,8 @@ function getVendor(){
 
 <?php $url_pu =  $this->url(array('module'=>'purchase','controller'=>'receive','action'=>'get-purchase-item')); ?>
 function getItem(){
-	var id = $('#pu_code').val();
+	//var id = $('#pu_code').val();
+	id=2;
 	if(id=="" || id ==null){
 		return false;
 	}else{
@@ -704,7 +706,7 @@ function getItem(){
 						template+='<td ><input type="text" class="validate[required,custom[number]] input form-control" onKeyup="calculatePrice('+num+')" value="'+qty_order+'" id="qty_recieve_'+num+'" name="qty_recieve_'+num+'" /></td>';
 						template+='<td ><input type="text" class="form-control" id="remark_'+num+'" name="remark_'+num+'" /> <input type="hidden" name="price_'+num+'" id="price_'+num+'" value="'+price+'" /> <input type="hidden" name="total_after_'+num+'" id="total_after_'+num+'" value="'+sub_total+'" /><input type="hidden" name="total_'+num+'" id="total_'+num+'" value="'+sub_total+'" /><input type="hidden" value="'+disc_value+'" id="dis_value'+num+'" name="dis_value'+num+'" class="form-control" /><input type="hidden" name="sub_total_receive_'+num+'" id="sub_total_receive_'+num+'" /> </td>';
 						template+="</tr>";
-						$('#table_order').innerHTML = template;
+						$('#table_order').append(template);
 						if($('#identity').val()!="") {
 							var identity = $('#identity').val();
 							$('#identity').val(identity+','+num);

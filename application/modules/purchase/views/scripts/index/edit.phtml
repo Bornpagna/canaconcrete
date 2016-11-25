@@ -105,8 +105,9 @@
 							</label>
 							<label class="control-label col-md-2 col-lg-2 col-sm-12">
 								<button type="button" class="btn red delete col-md-12">
-									<input type="checkbox" Onclick="Confirmmessage()" id="free" name="free" />
+								<!-- 	<input type="checkbox" Onclick="Confirmmessage()" id="free" name="free" />
 									<span>&nbsp;&nbsp;Free</span>
+									 -->
 								</button>
 							</label>
 						</div>
@@ -117,7 +118,6 @@
 											<td><?php echo $tr->translate("DEL");?></td>
 											<td><?php echo $tr->translate("NUM");?></td>
 											<td style="white-space:nowrap;"><?php echo $tr->translate("ITEM_NAME_CAP");?></td>
-											<td><?php echo $tr->translate("FREE");?></td>
 											<td><?php echo $tr->translate("QTY_UNIT");?></td>
 											<td><?php echo $tr->translate("QTY_PER_UNIT");?></td>
 											<td><?php echo $tr->translate("QTY_ORDER");?></td>
@@ -398,7 +398,7 @@ function addRow(item_id) {
 	}
 	template+='<td  width="2%">'+index5+'</td>';
 	template+='<td width="30%"><select class="form-control select2me" Onchange="ShowPopupProduct('+ index5 + ');" id="item_id_'+index5+'" name="item_id_'+index5+'" >'+option5+'<option></option></select>'+inp+'</td>';
-	template+='<td ><input type="checkbox" onkeyup="getPriceFree('+index5+')" id="pricefree_'+index5+'" name="pricefree_'+index5+'"/> </td>';
+	//template+='<td ><input type="checkbox" onkeyup="getPriceFree('+index5+')" id="pricefree_'+index5+'" name="pricefree_'+index5+'"/> </td>';
 	template+='<td ><input type="text" onkeyup="totalQty('+index5+')" class="validate[required,custom[number]] input form-control" required="1" value="1" id="qty_unit_'+index5+'" name="qty_unit_'+index5+'" /></td>';
 	template+='<td ><input type="text" onkeyup="totalQty('+index5+')" class="validate[required,custom[number]] input form-control" value="0" id="qty_per_unit_'+index5+'" name="qty_per_unit_'+index5+'" /></td>';
 	template+='<td ><input type="text" onkeyup="calculatePrice('+index5+')" class="form-control" required="1" id="qty'+index5+'" name="qty'+index5+'"/></td>';
@@ -419,7 +419,7 @@ function addRow(item_id) {
 	getQtyById(index5);
 
 	if(free.checked){
-		$("#pricefree_"+index5).attr({checked:'checked'});  
+		//$("#pricefree_"+index5).attr({checked:'checked'});  
 		$("#price"+index5).val(0);
 		$("#price"+index5).attr('readonly','readonly');
 		$("#dis-value"+index5).attr('readonly','readonly');
@@ -453,7 +453,7 @@ function initList() {
 	}
 	template+='<td  width="1%">'+index5+'</td>';
 	template+='<td width="30%"><select class="form-control select2me" Onchange="ShowPopupProduct('+ index5 + ');" id="item_id_'+index5+'" name="item_id_'+index5+'" >'+option5+'<option></option></select>'+inp+'</td>';
-	template+='<td ><input type="checkbox" onkeyup="getPriceFree('+index5+')" id="pricefree_'+index5+'" name="pricefree_'+index5+'"/> </td>';
+	//template+='<td ><input type="checkbox" onkeyup="getPriceFree('+index5+')" id="pricefree_'+index5+'" name="pricefree_'+index5+'"/> </td>';
 	template+='<td ><input type="text" onkeyup="totalQty('+index5+')" class="validate[required,custom[number]] input form-control" required="1" value="1" id="qty_unit_'+index5+'" name="qty_unit_'+index5+'" /></td>';
 	template+='<td ><input type="text" onkeyup="totalQty('+index5+')" class="validate[required,custom[number]] input form-control" value="0" id="qty_per_unit_'+index5+'" name="qty_per_unit_'+index5+'" /></td>';
 	template+='<td ><input type="text" onkeyup="calculatePrice('+index5+')" class="form-control" required="1" id="qty'+index5+'" name="qty'+index5+'"/></td>';
