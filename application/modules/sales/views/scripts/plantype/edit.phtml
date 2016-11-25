@@ -1,0 +1,54 @@
+<?php 
+defined('BASE_URL')	|| define('BASE_URL', Zend_Controller_Front::getInstance()->getBaseUrl());
+$tr = Application_Form_FrmLanguages::getCurrentlanguage();
+$form=$this->form;
+	$url_submit =  $this->url(array('module'=>'product','controller'=>'plantype','action'=>'add'));
+    $url_cencel =  $this->url(array('module'=>'product','controller'=>'index','action'=>'index'));
+    $url_check =  $this->url(array('module'=>'product','controller'=>'index','action'=>'check'));
+    $url_new = $this->url(array('module'=>'product','controller'=>'index','action'=>'add'));
+?>						 
+<!-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>  -->
+<title><?php echo $tr->translate("ADD_NEW_ITEM");?></title>
+<body>
+	<form class="form-horizontal" method="post" action="<?php //echo $url_submit;?>" >				
+					<div class="portlet box blue">
+						<div class="portlet-title">
+							<div class="caption">
+								<i class="fa fa-gift"></i><?php echo $tr->translate("ADD_NEW_PRODUCT");?>
+							</div>
+							<div class="tools">
+									<label><a href="<?php echo $url_cencel;?>"><button type="button" name="calcel" class="btn red"><i class="fa fa-times"></i><?php echo $tr->translate("GO_BACK");?></button></a></label>
+							</div>
+						</div>
+						<div class="portlet-body">
+								<div class="portlet-body form">
+										<div class="form-body">
+													<div class="form-group">
+															<label class="col-md-2 control-label"><?php echo $tr->translate("Name");?></label>
+														<div class="col-md-4">
+															<?php echo $form->getElement('nametype');?>
+														</div>
+															
+															<label class="col-md-2 control-label"><?php echo $tr->translate("STATUS");?></label>
+														<div class="col-md-4">
+															<?php echo $form->getElement('status');?>
+														</div>
+														
+													</div>
+														
+										<div class="form-group">
+											<label  class="col-md-12 col-md-offset-4 col-md-8">
+												<a href="<?php echo $this->baseUrl();?>/sales/saleagent"><button type="button" class="btn red"><i class="fa fa-times"></i> <?php echo $tr->translate("EXIT")?></button></a>
+												<button type="submit" name="save_close" value="saveclose" class="btn btn-primary" ><i class="glyphicon glyphicon-log-in"></i> <?php echo $tr->translate("SAVE_CLOSE")?></button>
+												<button type="submit" name="btnsavenew" class="btn btn-primary"><i class="fa fa-save"></i> <?php echo $tr->translate("SAVE_NEW")?> </button>
+												
+											</label>
+										</div>
+							<!--</div>-->
+									</div>
+									
+								</div>
+			</form>	
+</body>
+</html>
+
