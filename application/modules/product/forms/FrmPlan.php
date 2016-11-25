@@ -9,7 +9,9 @@ class Product_Form_FrmPlan extends Zend_Form
     	
 	}
 	///From plan 
-	function frmPlan($data=null){
+	function frmPlanType($data=null){
+		$db = new Product_Model_DbTable_DbPlan();
+		getStatus()
 		$name_type = new Zend_Form_Element_Text("nametype");
 		$name_type->setAttribs(array(
 				'class'=>'form-control',
@@ -21,8 +23,8 @@ class Product_Form_FrmPlan extends Zend_Form
 		$status->setAttribs(array(
 				'class'=>'form-control select2me',
 				'required'=>'required',
-				//'Onchange'	=>	'getMeasureLabel()'
 		));
+		$status->setMultiOptions($opt);
 		
 		if($data!=null){
 			$name_type->setValue($data["name"]);
@@ -116,7 +118,7 @@ class Product_Form_FrmPlan extends Zend_Form
 			//$_typecate->setValue($data["typecate"]);
 			$type_name->setValue($data["name"]);
 			//$status->setValue($data["status"]);
-			$status->setValue($data["statusplan"]);
+			$status->setValue($data["status"]);
 		}
 		
 		$this->addElements(array($status,$_typecate,$type_name,$_type,$address,$name_type,$name));

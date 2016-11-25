@@ -59,26 +59,6 @@ public function init()
 			Application_Model_Decorator::removeAllDecorator($formStockAdd);
 			$this->view->form = $formStockAdd;
 			
-			$formBrand = new Product_Form_FrmBrand();
-			$frmBrand = $formBrand->Brand();
-			$this->view->frmBrand = $frmBrand;
-			Application_Model_Decorator::removeAllDecorator($frmBrand);
-			
-			$formCat = new Product_Form_FrmCategory();
-			$frmCat = $formCat->cat();
-			$this->view->frmCat = $frmCat;
-			Application_Model_Decorator::removeAllDecorator($frmCat);
-			
-			$formMeasure = new Product_Form_FrmMeasure();
-			$frmMesure = $formMeasure->measure();
-			$this->view->frmMesure = $frmMesure;
-			Application_Model_Decorator::removeAllDecorator($frmMesure);
-			
-			$fmOther = new Product_Form_FrmOther();
-			$frmOther = $fmOther->add();
-			Application_Model_Decorator::removeAllDecorator($frmOther);
-			$this->view->frmOther = $frmOther;
-			
 	}
 	public function editAction()
 	{

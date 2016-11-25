@@ -26,21 +26,20 @@
 			<form class="form-horizontal" method="post" action="" >
 				<div class="form-body">
 					<div class="form-group">
-						<div class="col-md-4">
-							<?php echo $form->getElement("status");?>
-						</div>
-						<div class="col-md-4">
-							<?php echo $form->getElement('typecate');?>
-						</div>
-												
-					</div>
-					<div class="form-group">
-						<div class="col-md-4">
+						<div class="col-md-3">
 							<input  class="form-control" id="adv_search" name="adv_search" value="<?php echo $this->row['adv_search']?>" placeholder="<?php echo $this->translate("Search");?>" type="text" >
 						</div>
-						<div class="col-md-4">
+						
+						<div class="col-md-3">
+							<?php echo $form->getElement('typecate');?>
+						</div>
+						
+						<div class="col-md-3">
+							<?php echo $form->getElement("status");?>
+						</div>
+						<div class="col-md-3">
 							<button class="btn btn-primary col-md-12" value="" ><i class="fa fa-save"></i>&nbsp;<?php echo $tr->translate("Search");?></button>
-						</div>		
+						</div>						
 					</div>
 				</div>
 				

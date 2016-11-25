@@ -52,30 +52,10 @@ public function init()
 			}
 			//$rs_plantype = $db->getPlanType();
 			//$this->view->plantype = $rs_plantype;
-			$formProduct = new Product_Form_FrmProduct();
-			$formStockAdd = $formProduct->add(null);
+			$formProduct = new Product_Form_FrmPlan();
+			$formStockAdd = $formProduct->frmPlanType(null);
 			Application_Model_Decorator::removeAllDecorator($formStockAdd);
 			$this->view->form = $formStockAdd;
-			
-			$formBrand = new Product_Form_FrmBrand();
-			$frmBrand = $formBrand->Brand();
-			$this->view->frmBrand = $frmBrand;
-			Application_Model_Decorator::removeAllDecorator($frmBrand);
-			
-			$formCat = new Product_Form_FrmCategory();
-			$frmCat = $formCat->cat();
-			$this->view->frmCat = $frmCat;
-			Application_Model_Decorator::removeAllDecorator($frmCat);
-			
-			$formMeasure = new Product_Form_FrmMeasure();
-			$frmMesure = $formMeasure->measure();
-			$this->view->frmMesure = $frmMesure;
-			Application_Model_Decorator::removeAllDecorator($frmMesure);
-			
-			$fmOther = new Product_Form_FrmOther();
-			$frmOther = $fmOther->add();
-			Application_Model_Decorator::removeAllDecorator($frmOther);
-			$this->view->frmOther = $frmOther;
 			
 	}
 	public function editAction()
@@ -99,33 +79,11 @@ public function init()
 				  	Application_Form_FrmMessage::messageError("INSERT_ERROR",$err = $e->getMessage());
 				  }
 			}
-			
-			//$rs_plantype = $db->getPlanType();
-			//$this->view->plantype = $rs_plantype;
-			$formProduct = new Product_Form_FrmProduct();
-			$formStockAdd = $formProduct->frmPlan($row);
+			$formProduct = new Product_Form_FrmPlan();
+			$formStockAdd = $formProduct->frmPlanType($row);
 			Application_Model_Decorator::removeAllDecorator($formStockAdd);
 			$this->view->form = $formStockAdd;
 			
-			$formBrand = new Product_Form_FrmBrand();
-			$frmBrand = $formBrand->Brand();
-			$this->view->frmBrand = $frmBrand;
-			Application_Model_Decorator::removeAllDecorator($frmBrand);
-			
-			$formCat = new Product_Form_FrmCategory();
-			$frmCat = $formCat->cat();
-			$this->view->frmCat = $frmCat;
-			Application_Model_Decorator::removeAllDecorator($frmCat);
-			
-			$formMeasure = new Product_Form_FrmMeasure();
-			$frmMesure = $formMeasure->measure();
-			$this->view->frmMesure = $frmMesure;
-			Application_Model_Decorator::removeAllDecorator($frmMesure);
-			
-			$fmOther = new Product_Form_FrmOther();
-			$frmOther = $fmOther->add();
-			Application_Model_Decorator::removeAllDecorator($frmOther);
-			$this->view->frmOther = $frmOther;
 	}
 	
 }

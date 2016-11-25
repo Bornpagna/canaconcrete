@@ -13,6 +13,7 @@ class Product_Model_DbTable_DbPlan extends Zend_Db_Table_Abstract
 	    'name'=>$_data['name'],
 	  	'address'=>$_data['address'],
 	  	'status'=>$_data['status'],
+		'date'	=> date('Y-m-d'),
 	    );
 	  $this->insert($_arr);// insert data into database
  }//add product
@@ -24,7 +25,11 @@ class Product_Model_DbTable_DbPlan extends Zend_Db_Table_Abstract
  public function updateplanById($_data){
  	$_arr = array(
  				
- 			'name'=>$_data['typename'],
+ 			'type'=>$_data['type'],
+			'name'=>$_data['name'],
+			'address'=>$_data['address'],
+			'status'=>$_data['status'],
+			'date'	=> date('Y-m-d'),
  	);
  	$where = "id =".$_data['id'];
  	
@@ -74,7 +79,11 @@ WHERE 1";
   	return $db->fetchAll($sql);
   } 
   
-	 
+	function getStatus(){
+		$db = $this->getAdapter();
+		$sql="SELECT v.`key_code`,v.`name_en` FROM `tb_view` AS v WHERE v.`type`=5";
+		return $db->fetchAll($sql);
+	} 
 	 
 	
     
