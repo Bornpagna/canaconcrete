@@ -80,11 +80,12 @@ table.user td{
 							</div>
 						</div>
 						<div class="form-group">
-							<label class="control-label col-md-2"><span class="required">
+							<label class="control-label col-md-2"><?php echo $tr->translate('USER_TYPE');?><span class="required">
 								 </span>
 							</label>
 							<div class="col-md-4">
 								<div class="input-icon right">
+									<?php echo $form->getElement('user_type_id');?>
 								</div>
 							</div>
 							<label class="control-label col-md-2"><span class="required">
@@ -97,20 +98,22 @@ table.user td{
 							</div>
 						</div>
 						<div class="form-group" >
-							<label class="control-label col-md-2"><?php echo $tr->translate('USER_TYPE');?><span class="required">
-								 </span>
-							</label>
-							<div class="col-md-4">
-								<div class="input-icon right">
-									<?php echo $form->getElement('user_type_id');?>
-								</div>
-							</div>
+							
 							<label class="control-label col-md-2"><?php echo $tr->translate("ASS_TO_LOCATION");?><span class="required">
 								 </span>
 							</label>
 							<div class="col-md-4">
 								<div class="input-icon right">
 									<?php echo $form->getElement("LocationId");?>
+								</div>
+							</div>
+							
+							<label class="control-label col-md-2"><?php echo $tr->translate('STATUS');?><span class="required">
+								 </span>
+							</label>
+							<div class="col-md-4">
+								<div class="input-icon right">
+									<?php echo $form->getElement('status');?>
 								</div>
 							</div>
 						</div>
@@ -158,7 +161,7 @@ jQuery(document).ready(function(){
 		index5++;
 		template='<tr id="row_order_'+index5+'">';
 		template+='<td class="quater-input"><img onClick="deleteRecord('+index5+')" src="<?php echo BASE_URL; ?>/images/icon/delete.gif" /></td>';
-		template+='<td class="quater-input"><select class="validate[required] chzn-select-deselect" Onchange="AddLocation('+index5+')" id="location_id_'+index5+'" name="location_id_'+index5+'" data-placeholder="'+option5+'" >'+option5+'</select></td>';
+		template+='<td class="quater-input"><select class="form-control validate[required] chzn-select-deselect" Onchange="AddLocation('+index5+')" id="location_id_'+index5+'" name="location_id_'+index5+'" >'+option5+'</select></td>';
 		template+="</tr>";
 		$('#table_order').append(template);
 		if($('#identity').val()!="") {
@@ -184,7 +187,7 @@ function initList() {
 			} else {
 			template+='<td class="quater-input"><img onClick="deleteRecord(<?php echo $inx;?>)" src="<?php echo BASE_URL; ?>/images/icon/delete.gif" /></td>';
 			}			
-			template+='<td class="quater-input"><select class="validate[required]" id="location_id_<?php echo $inx;?>" name="location_id_<?php echo $inx;?>" data-placeholder="'+optionItem+'" >'+optionItem+'</select></td>'; 
+			template+='<td class="quater-input"><select class="form-control validate[required]" id="location_id_<?php echo $inx;?>" name="location_id_<?php echo $inx;?>"  >'+optionItem+'</select></td>'; 
 			template+='</tr>';
 			$('#table_order').append(template);
 
@@ -195,6 +198,7 @@ function initList() {
 			} else {$('#identity').val(<?php echo $inx;?>);}
 			
 		<?php }  }?>
+		
 }
 
 function deleteRecord(index) {

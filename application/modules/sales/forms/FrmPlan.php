@@ -109,7 +109,12 @@ class Sales_Form_FrmPlan extends Zend_Form
 				//'required'=>'required'
 		));
 		$status = new Zend_Form_Element_Select("status");
-		$opt = array('1'=>$this->tr->translate("ACTIVE"),'0'=>$this->tr->translate("DEACTIVE"));
+		$opt = array();
+		if(!empty($row)){
+			foreach($row as $rs){
+				$opt[$rs["key_code"]] = $rs["name_en"];
+			}
+		}
 		$status->setAttribs(array(
 				'class'=>'form-control select2me',
 				//'Onchange'	=>	'getMeasureLabel()'
@@ -132,9 +137,9 @@ class Sales_Form_FrmPlan extends Zend_Form
 	function SalesFilter(){
 		$tr = Application_Form_FrmLanguages::getCurrentlanguage();
 		$request=Zend_Controller_Front::getInstance()->getRequest();
-		
 		$db_p = new Sales_Model_DbTable_DbPlan();
 		$row_cate = $db_p->getType();
+		$row = $db_p->getStatus();
 		$ad_search = new Zend_Form_Element_Text("ad_search");
 		$ad_search->setAttribs(array(
 				'class'=>'form-control',

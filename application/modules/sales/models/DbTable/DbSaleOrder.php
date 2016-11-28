@@ -72,6 +72,7 @@ class Sales_Model_DbTable_DbSaleOrder extends Zend_Db_Table_Abstract
 					"user_mod"       => 	$GetUserId,
 					'pending_status' =>2,
 					"date"      => 	date("Y-m-d"),
+					'type'		=> 	1
 			);
 			$this->_name="tb_sales_order";
 			$sale_id = $this->insert($info_purchase_order); 

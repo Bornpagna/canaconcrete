@@ -155,6 +155,75 @@ class Sales_IndexController extends Zend_Controller_Action
 		Application_Model_Decorator::removeAllDecorator($formpopup);
 		$this->view->form_customer = $formpopup;
 	}
+	
+	function editrequestAction(){
+		$id = ($this->getRequest()->getParam('id'))? $this->getRequest()->getParam('id'): '0';
+		$dbq = new Sales_Model_DbTable_DbRequest();
+		$db = new Application_Model_DbTable_DbGlobal();
+		if($this->getRequest()->isPost()) {
+			$data = $this->getRequest()->getPost();
+			$data["id"]=$id;
+			try {
+				if(!empty($data['identity'])){
+					$dbq->updateRequestOrder($data);
+				}
+				Application_Form_FrmMessage::Sucessfull("UPDATE_SUCESS","/sales/index/requestlist");
+			}catch (Exception $e){
+				//Application_Form_FrmMessage::message('UPDATE_FAIL');
+				$err =$e->getMessage();
+				Application_Model_DbTable_DbUserLog::writeMessageError($err);
+				echo $err;exit();
+			}
+		}
+		$row = $dbq->getSaleorderItemById($id);
+		$this->view->rs = $dbq->getSaleorderItemDetailid($id);
+		$this->view->rsterm = $dbq->getTermconditionByid($id);
+		
+		///link left not yet get from DbpurchaseOrder
+		$frm_purchase = new Sales_Form_FrmRequest(null);
+		$form_sale = $frm_purchase->SaleOrder($row);
+		Application_Model_Decorator::removeAllDecorator($form_sale);
+		$this->view->form_sale = $form_sale;
+		 
+		// item option in select
+		$items = new Application_Model_GlobalClass();
+		$this->view->items = $items->getProductOption();
+		$this->view->term_opt = $db->getAllTermCondition(1);
+	}
+	
+	function requestlistAction(){
+		if($this->getRequest()->isPost()){
+			$search = $this->getRequest()->getPost();
+			$search['start_date']=date("Y-m-d",strtotime($search['start_date']));
+			$search['end_date']=date("Y-m-d",strtotime($search['end_date']));
+		}
+		else{
+			$search =array(
+					'text_search'=>'',
+					'start_date'=>date("Y-m-d"),
+					'end_date'=>date("Y-m-d"),
+					'branch_id'=>-1,
+					'customer_id'=>-1,
+					);
+		}
+		$db = new Sales_Model_DbTable_DbRequest();
+		$rows = $db->getAllRequestOrder($search);
+		$columns=array("BRANCH_NAME","SALE_NO","REQUEST_NAME","POSITION","PLAN","ORDER_DATE","TOTAL_AMOUNT","BY_USER","STATUS");
+		$link=array(
+				'module'=>'sales','controller'=>'index','action'=>'editrequest',
+		);
+		$link1=array(
+				'module'=>'sales','controller'=>'index','action'=>'viewapp',
+		);
+		
+		$list = new Application_Form_Frmlist();
+		$this->view->list=$list->getCheckList(0, $columns, $rows, array('location'=>$link,'request_name'=>$link,'position'=>$link,
+				'sale_no'=>$link,'plan'=>$link));
+		
+		$formFilter = new Sales_Form_FrmSearch();
+		$this->view->formFilter = $formFilter;
+	    Application_Model_Decorator::removeAllDecorator($formFilter);
+	}
 	function viewappAction(){
 		$id = ($this->getRequest()->getParam('id'))? $this->getRequest()->getParam('id'): '0';
 		if(empty($id)){

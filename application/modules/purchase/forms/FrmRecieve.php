@@ -156,7 +156,8 @@ public function add($data=null) {
     	$this->addElement($paidElement);
     	
     	if($data != null) {
-	       
+	       $branch->setValue($data["branch_id"]);
+		   $pu_code->setValue($data["order_number"]);
     	}
     	return $this;
 	}

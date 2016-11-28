@@ -16,15 +16,36 @@ class Rsvacl_UserController extends Zend_Controller_Action
 		// action body
     	$tr = Application_Form_FrmLanguages::getCurrentlanguage();
         $getUser = new Rsvacl_Model_DbTable_DbUser();
-              
+         $where='';
         if($this->getRequest()->getParam('user_type_filter')){
 			$user_type_id = $this->getRequest()->getParam('user_type_filter');
-			$where=" where user_type_id=".$user_type_id;
+			$where.=" AND user_type_id=".$user_type_id;
+		}
+		if($this->getRequest()->getParam('location')){
+			$location = $this->getRequest()->getParam('location');
+			$where.=" AND LocationId=".$location;
+		}
+		//if($this->getRequest()->getParam('status')){
+			$status = $this->getRequest()->getParam('status_se');
+			//echo "adae".$status;
+			if($status!=""){
+				$where.=" AND status="."'".$status."'";
+			}
+		//}
+		if($this->getRequest()->getParam('ad_search')){
+			$ad_search = $this->getRequest()->getParam('ad_search');
+			$s_where=array();
+			$s_search = addslashes(trim($ad_search));
+			$s_where[]= " fullname LIKE '%{$s_search}%'";
+			$s_where[]=" username LIKE '%{$s_search}%'";
+			//$s_where[]= " cate LIKE '%{$s_search}%'";
+			$where.=' AND ('.implode(' OR ', $s_where).')';
 		}
         $userQuery = "select `user_id`,fullname,`username`,
         (SELECT user_type FROM `tb_acl_user_type`  WHERE user_type_id=tb_acl_user.user_type_id) AS user_type,
         (SELECT name FROM `tb_sublocation` WHERE id=LocationId) AS branch_name,
-        `created_date`,`modified_date`,`status` from tb_acl_user";
+        `created_date`,`modified_date`,`status` from tb_acl_user WHERE 1";
+		//echo $userQuery.$where;
         $userQuery = $userQuery.$where;
         
         $rows = $getUser->getUserInfo($userQuery);
@@ -101,10 +122,10 @@ class Rsvacl_UserController extends Zend_Controller_Action
     	if(!$user_id)$user_id=0;
    		$form = new Rsvacl_Form_FrmUser();
     	$db = new Rsvacl_Model_DbTable_DbUser();
-		$rs = $db->getUserInfo('SELECT * FROM tb_acl_user where user_id='.$user_id);
-		Application_Model_Decorator::setForm($form, $rs);
+		$rs = $db->getUserById($user_id);
+		//Application_Model_Decorator::setForm($form, $rs);
 		
-    	$this->view->form = $form;
+    	$this->view->form = $form->init($rs);
     	$this->view->user_id = $user_id;
     	
     	$rsloc = $db->getUserInfo('SELECT * FROM tb_acl_ubranch where user_id='.$user_id ." GROUP BY location_id ");

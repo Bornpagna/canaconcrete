@@ -21,7 +21,7 @@ class Sales_Model_DbTable_DbRequest extends Zend_Db_Table_Abstract
 		$sql = "SELECT s.`prefix` FROM `tb_sublocation` AS s WHERE s.id=$id";
 		$prefix = $db->fetchOne($sql);
 		
-		$sql="SELECT s.id FROM `tb_sales_order` AS s WHERE s.`type`=1 ORDER BY s.`id` DESC";
+		$sql="SELECT s.id FROM `tb_sales_order` AS s WHERE s.`type`=2 ORDER BY s.`id` DESC LIMIT 1";
 		$acc_no = $db->fetchOne($sql);
 		$new_acc_no= (int)$acc_no+1;
 		$acc_no= strlen((int)$acc_no+1);
@@ -31,23 +31,26 @@ class Sales_Model_DbTable_DbRequest extends Zend_Db_Table_Abstract
 		}
 		return $pre.$new_acc_no;
 	}
-	function getAllSaleOrder($search){
+	function getAllRequestOrder($search){
 			$db= $this->getAdapter();
-			$sql=" SELECT id,
-			(SELECT name FROM `tb_sublocation` WHERE tb_sublocation.id = branch_id AND status=1 AND name!='' LIMIT 1) AS branch_name,
-			(SELECT cust_name FROM `tb_customer` WHERE tb_customer.id=tb_sales_order.customer_id LIMIT 1 ) AS customer_name,
-			(SELECT name FROM `tb_sale_agent` WHERE tb_sale_agent.id =tb_sales_order.saleagent_id  LIMIT 1 ) AS staff_name,
-			sale_no,date_sold,
-			(SELECT symbal FROM `tb_currency` WHERE id= currency_id limit 1) As curr_name,
-			net_total,paid,balance,
-			(SELECT name_en FROM `tb_view` WHERE type=7 AND key_code=is_approved LIMIT 1) AS approval,
-			(SELECT name_en FROM `tb_view` WHERE type=8 AND key_code=pending_status LIMIT 1) AS processing,
-			(SELECT u.fullname FROM tb_acl_user AS u WHERE u.user_id = user_mod) AS user_name
-			FROM `tb_sales_order` ";
+			$sql="SELECT 
+					  s.id,
+					  (SELECT sl.`name` FROM `tb_sublocation` AS sl WHERE sl.`id`=s.`branch_id`) AS location,
+					  s.`sale_no`,
+					  s.`request_name`,
+					  s.`position`,
+					  (SELECT `name` FROM `tb_plan` AS p WHERE p.id=s.`plan_id`) AS plan,
+					  s.`date_sold`,
+					  s.`all_total` ,
+					  (SELECT u.`fullname` FROM `tb_acl_user` AS u WHERE u.`user_id`=s.`user_mod`) AS `user`,
+					  (SELECT v.name_en FROM `tb_view` AS v WHERE v.type=5 AND v.key_code=s.`status`) AS `status`
+					FROM
+					  `tb_sales_order` AS s 
+					WHERE s.`type` = 2 ";
 			
 			$from_date =(empty($search['start_date']))? '1': " date_sold >= '".$search['start_date']." 00:00:00'";
 			$to_date = (empty($search['end_date']))? '1': " date_sold <= '".$search['end_date']." 23:59:59'";
-			$where = " WHERE ".$from_date." AND ".$to_date;
+			$where = " AND ".$from_date." AND ".$to_date;
 			if(!empty($search['text_search'])){
 				$s_where = array();
 				$s_search = trim(addslashes($search['text_search']));
@@ -81,23 +84,25 @@ class Sales_Model_DbTable_DbRequest extends Zend_Db_Table_Abstract
 			$so = $dbc->getSalesNumber($data["branch_id"]);
 
 			$info_purchase_order=array(
-					"customer_id"   => 		$data['customer_id'],
+					"plan_id"  		 => 	$data['plan'],
+					"request_name"	=>		$data["request_by"],
+					"position"		=>		$data["requstman_pos"],
 					"branch_id"     => 		$data["branch_id"],
-					"sale_no"       => 		$so,//$data['txt_order'],
+					"sale_no"       => 		$data["apno"],//$data['txt_order'],
 					"date_sold"     => 		date("Y-m-d",strtotime($data['order_date'])),
 					"saleagent_id"  => 		$data['saleagent_id'],
-					"payment_method" => 	$data['payment_name'],
-					"currency_id"    => 	$data['currency'],
+					//"payment_method" => 	$data['payment_name'],
+					//"currency_id"    => 	$data['currency'],
 					"remark"         => 	$data['remark'],
 					"all_total"      => 	$data['totalAmoun'],
 					"discount_value" => 	$data['dis_value'],
 					"discount_real"  => 	$data['global_disc'],
 					"net_total"      => 	$data['all_total'],
-					"paid"        	 => 	$data['paid'],
-					"balance"      	 => 	$data['remain'],
-					"tax"			 =>     $data["total_tax"],
+					//"paid"        	 => 	$data['paid'],
+					//"balance"      	 => 	$data['remain'],
+					//"tax"			 =>     $data["total_tax"],
 					"user_mod"       => 	$GetUserId,
-					'pending_status' =>		2,
+					//'pending_status' =>		2,
 					"date"      	 => 	date("Y-m-d"),
 					"type"			=>		2
 			);
@@ -117,7 +122,7 @@ class Sales_Model_DbTable_DbRequest extends Zend_Db_Table_Abstract
 						'qty_order'	  	=> 	$data['qty'.$i],
 						'price'		  	=> 	$data['price'.$i],
 						'old_price'   	=>  $data['current_qty'.$i],
-						'disc_value'  	=> 	$data['real-value'.$i],//check it
+						//'disc_value'  	=> 	$data['real-value'.$i],//check it
 						'sub_total'	  	=> 	$data['total'.$i],
 				);
 				$this->_name='tb_salesorder_item';
@@ -148,7 +153,7 @@ class Sales_Model_DbTable_DbRequest extends Zend_Db_Table_Abstract
 			Application_Model_DbTable_DbUserLog::writeMessageError($err);
 		}
 	}
-	public function updateSaleOrder($data)
+	public function updateRequestOrder($data)
 	{
 		$id=$data["id"];
 		$db = $this->getAdapter();
@@ -161,22 +166,27 @@ class Sales_Model_DbTable_DbRequest extends Zend_Db_Table_Abstract
 			$dbc=new Application_Model_DbTable_DbGlobal();
 // 			$so = $dbc->getSalesNumber($data["branch_id"]);
 			$arr=array(
-					"customer_id"   => 	$data['customer_id'],
-					"branch_id"     => 	$data["branch_id"],
-// 					"sale_no"       => 	$so,//$data['txt_order'],
-					"date_sold"     => 	date("Y-m-d",strtotime($data['order_date'])),
-					"saleagent_id"  => 	$data['saleagent_id'],
-					"currency_id"    => $data['currency'],
+					"plan_id"  		 => 	$data['plan'],
+					"request_name"	=>		$data["request_by"],
+					"position"		=>		$data["requstman_pos"],
+					"branch_id"     => 		$data["branch_id"],
+					"sale_no"       => 		$data["apno"],//$data['txt_order'],
+					"date_sold"     => 		date("Y-m-d",strtotime($data['order_date'])),
+					"saleagent_id"  => 		$data['saleagent_id'],
+					//"payment_method" => 	$data['payment_name'],
+					//"currency_id"    => 	$data['currency'],
 					"remark"         => 	$data['remark'],
 					"all_total"      => 	$data['totalAmoun'],
 					"discount_value" => 	$data['dis_value'],
-// 					"discount_real"  => 	$data['global_disc'],
+					"discount_real"  => 	$data['global_disc'],
 					"net_total"      => 	$data['all_total'],
+					//"paid"        	 => 	$data['paid'],
+					//"balance"      	 => 	$data['remain'],
+					//"tax"			 =>     $data["total_tax"],
 					"user_mod"       => 	$GetUserId,
- 					'pending_status' =>1,
-					'is_approved'=>0,
-					'is_toinvocie'=>0,
-					"date"      => 	date("Y-m-d"),
+					//'pending_status' =>		2,
+					"date"      	 => 	date("Y-m-d"),
+					"type"			=>		2
 			);
 
 			$this->_name="tb_sales_order";
@@ -184,30 +194,63 @@ class Sales_Model_DbTable_DbRequest extends Zend_Db_Table_Abstract
 			$this->update($arr, $where);
 			unset($arr);
 			
-			$this->_name='tb_salesorder_item';
-			$where = " saleorder_id =".$id;
-			$this->delete($where);
+			$row_old_item = $this->getSaleorderItemDetailid($data["id"]);
+			if(!empty($row_old_item)){
+				foreach($row_old_item AS $rs){
+					$sql = "SELECT pl.id,pl.`qty` FROM `tb_prolocation` AS pl WHERE pl.`pro_id`=".$rs["pro_id"]. " AND pl.`location_id` =".$data["old_location"];
+					$row = $db->fetchRow($sql);
+					
+						$arr_old = array(
+							'qty'	=> $row["qty"]+$rs["qty_order"],
+						);
+						$where = $db->quoteInto("id=?",$row["id"]);
+						$this->_name = "tb_prolocation";
+						$this->update($arr_old,$where);
+				}
+				
+				$this->_name='tb_salesorder_item';
+				$where = " saleorder_id =".$id;
+				$this->delete($where);
+			}
+			
+			
 			
 			$ids=explode(',',$data['identity']);
 			$locationid=$data['branch_id'];
 			foreach ($ids as $i)
 			{
 				$data_item= array(
-						'saleorder_id'=> $id,
+						'saleorder_id'=> $data["id"],
 						'pro_id'	  => 	$data['item_id_'.$i],
 						'qty_unit'=>$data['qty_unit_'.$i],
 						'qty_detail'  => 	$data['qty_per_unit_'.$i],
 						'qty_order'	  => 	$data['qty'.$i],
 						'price'		  => 	$data['price'.$i],
 						'old_price'   =>    $data['current_qty'.$i],
-						'disc_value'  => $data['real-value'.$i],//check it
+						//'disc_value'  => $data['real-value'.$i],//check it
 						'sub_total'	  => $data['total'.$i],
 				);
 				$this->_name='tb_salesorder_item';
 				$this->insert($data_item);
+				
+				$rows=$this->productLocationInventory($data['item_id_'.$i], $locationid);//check stock product location
+					if($rows)
+					{
+						//if($data["status"]==4 OR $data["status"]==5){
+							//echo$rows["qty"];
+							$datatostock   = array(
+									'qty'   			=> 		$rows["qty"]-$data['qty'.$i],
+									'last_mod_date'		=>		date("Y-m-d"),
+									'last_mod_userid'	=>		$GetUserId
+							);
+							$this->_name="tb_prolocation";
+							$where=" id = ".$rows['id'];
+							$this->update($datatostock, $where);
+						//}
+					}
 // 				print_r($data_item);exit();
 			}
-			$this->_name='tb_quoatation_termcondition';
+			/*$this->_name='tb_quoatation_termcondition';
 			$where = " term_type=2 AND quoation_id = ".$id;
 			$this->delete($where);
 			
@@ -226,14 +269,14 @@ class Sales_Model_DbTable_DbRequest extends Zend_Db_Table_Abstract
 					$this->_name='tb_quoatation_termcondition';
 					$this->insert($data_item);
 				}
-			}
-			
+			}*/
+			//exit();
 			$db->commit();
 		}catch(Exception $e){
 			$db->rollBack();
-			Application_Form_FrmMessage::message('INSERT_FAIL');
+			//Application_Form_FrmMessage::message('INSERT_FAIL');
 			$err =$e->getMessage();
-			echo $err;exit();
+			//echo $err;exit();
 			Application_Model_DbTable_DbUserLog::writeMessageError($err);
 		}
 	}

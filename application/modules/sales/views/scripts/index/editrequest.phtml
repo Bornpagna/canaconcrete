@@ -16,7 +16,7 @@
 			</div>
 			<div class="portlet-body form">
 				<!-- BEGIN FORM-->
-				<form id="orderFrm" action="<?php echo $url_submit; ?>" class="form-horizontal" enctype="multipart/form-data" method="post">
+				<form id="orderFrm" action="<?php // echo $url_submit; ?>" class="form-horizontal" enctype="multipart/form-data" method="post">
 					<div class="form-body">
 						<div class="form-group">
 							<label class="control-label col-md-2"><?php //echo $tr->translate("BRANCH_NAME");?><span class="required">
@@ -25,7 +25,7 @@
 							<div class="col-md-4">
 								<div class="input-icon right">
 									<i class="fa"></i>
-									<?php //echo $form->getElement('branch_id');?>
+									<?php echo $form->getElement('old_location');?>
 								</div>
 							</div>
 							<label class="control-label col-md-2"><?php echo $tr->translate("SALE_AGENT");?> <span class="required">
@@ -231,171 +231,10 @@
 		</div>
 	</div>
 </div>
-<?php $form = $this->form_customer; ?>
-<div id="customerpopup" class="modal fade" tabindex="-1" data-width="1200">
-       <div class="modal-dialog">
-      <div class="modal-content">
-      <div class="modal-header">   
-		<div class="row">
-		<div class="col-md-12">
-			<div class="portlet box blue">
-			<div class="portlet-title">
-				<div class="caption">
-					<i class="icon-home"></i><?php echo $tr->translate("ADD_NEW_CUSTOMER");?>
-				</div>
-				<div class="caption pull-right">
-					<a href="<?php echo $url_new;?>" >
-						 <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
-					</a>
-				</div>
-			</div>
-			<div class="portlet-body form">
-				<form id="frmcustomer" name="frmcustomer" class="form-horizontal" enctype="multipart/form-data" method="post">
-				<div class="form-body">
-						<div class="form-group">
-							<label class="control-label col-md-2"><?php echo $tr->translate("Branch Name");?><span class="required">
-								</span>
-							</label>
-							<div class="col-md-4">
-								<div class="input-icon right">
-									<i class="fa"></i>
-									<?php echo $form->getElement("branch_id");?>
-								</div>
-							</div>
-							<label class="control-label col-md-2">
-							<?php echo $tr->translate("COMPANY_NUMBER");?><span class="required">
-								</span>
-							</label>
-							<div class="col-md-4">
-								<div class="input-icon right">
-									<i class="fa"></i>
-									<?php echo $form->getElement('cu_code'); ?>
-								</div>
-							</div>
-						</div>
-						<div class="form-group">
-							<label class="control-label col-md-2"><?php echo $tr->translate("COMPANY_NAME");?> <span class="required">
-								</span>
-							</label>
-							<div class="col-md-4">
-								<div class="input-icon right">
-									<i class="fa"></i>
-									<?php echo $form->getElement('txt_name'); ?>
-								</div>
-							</div>
-							<label class="control-label col-md-2">
-							<?php echo $tr->translate("COMPANY_NUMBER");?><span class="required">
-								</span>
-							</label>
-							<div class="col-md-4">
-								<div class="input-icon right">
-									<i class="fa"></i>
-									<?php echo $form->getElement('txt_phone'); ?>
-								</div>
-							</div>
-						</div>
-					<div class="form-group">
-							<label class="control-label col-md-2"><?php echo $tr->translate("CON_NAME");?><span class="required">
-								</span>
-							</label>
-							<div class="col-md-4">
-								<div class="input-icon right">
-									<i class="fa"></i>
-									<?php echo $form->getElement('txt_contact_name'); ?>
-								</div>
-							</div>
-							<label class="control-label col-md-2">
-							<?php echo $tr->translate("CON_NUMBER");?><span class="required"></span>
-							</label>
-							<div class="col-md-4">
-								<div class="input-icon right">
-									<i class="fa"></i><?php echo $form->getElement('contact_phone'); ?>
-								</div>
-							</div>
-					</div>
-					<div class="form-group">
-							<label class="control-label col-md-2"><?php echo $tr->translate("CUSTOMER_TYPE");?> <span class="required">
-								</span>
-							</label>
-							<div class="col-md-4">
-									<div class="input-icon right">
-										<i class="fa"></i>
-										<?php echo $form->getElement('customer_type'); ?>
-									</div>
-							</div>
-							<label class="control-label col-md-2">
-							<?php echo $tr->translate("Customer Level");?><span class="required">
-								</span>
-							</label>
-							<div class="col-md-4">
-								<div class="input-icon right">
-									<i class="fa"></i>
-									<?php echo $form->getElement('customer_level'); ?>
-								</div>
-							</div>
-					</div>
-					<div class="form-group">
-							<label class="control-label col-md-2"><?php echo $tr->translate("VENDOR_ADD");?><span class="required">
-								</span>
-							</label>
-							<div class="col-md-4">
-								<div class="input-icon right">
-									<i class="fa"></i>
-									<?php echo $form->getElement("txt_address");?>
-								</div>
-							</div>
-							<label class="control-label col-md-2">
-							<?php echo $tr->translate("EMAIL");?><span class="required">
-								</span>
-							</label>
-							<div class="col-md-4">
-								<div class="input-icon right">
-									<i class="fa"></i>
-									<?php echo $form->getElement('txt_mail'); ?>
-								</div>
-							</div>
-					</div>
-					
-					<div class="form-group">
-						<label class="control-label col-md-2"><?php echo $tr->translate("CREDIT_LIMIT");?> <span class="required">
-								</span>
-						</label>
-						<div class="col-md-4">
-								<div class="input-icon right">
-									<i class="fa"></i>
-									<?php echo $form->getElement('credit_limit'); ?>
-								</div>
-						</div>
-						<label class="control-label col-md-2">
-							<?php echo $tr->translate("CREDIT_TEARM");?><span class="required">
-								</span>
-						</label>
-						<div class="col-md-4">
-								<div class="input-icon right">
-									<i class="fa"></i>
-									<?php echo $form->getElement("credit_tearm");?>
-								</div>
-						</div>
-						
-					</div>
-					
-					<div class="form-group">
-						<label  class="col-md-12 col-md-offset-4 col-md-8">
-							<button type="button" name="btnsavenew" onclick="addNewCustomer();" class="btn btn-primary"><i class="fa fa-save"></i> <?php echo $tr->translate("SAVE_CUSTOMER")?> </button>
-						</label>
-					</div>
-				</div>
-				</form>
-			</div>
-		</div>
-	</div>
-</div>
-          </div>
-        </div>
-    </div>
- </div>
-<!-- end new product -->
+
 <script>
+ addPlanAddr();
+ initList();
 var index5 = 0;num=0;
 var option5 = '<?php echo $this->items; ?>';
 var baseUrl = '<?php echo BASE_URL; ?>';
@@ -451,6 +290,54 @@ function addRow(item_id) {
 	}
 	$("#row_order_0").remove();
 	$("#orderFrm").validationEngine();
+}
+function initList() {
+	index5=0;
+	var template;
+	var option5 = '<?php echo $this->items;?>';
+	<?php if(!empty($this->rs)) {
+		foreach($this->rs AS $i=>$r){?>
+	index5++; 
+	index=index+1;
+	template='<tr id="row_order_'+index5+'" style="height:33px;">';
+	var inp = '';
+	if(index5 == 1) {
+		template+='<td >&nbsp;</td>';
+	} else {
+		template+='<td ><img onClick="deleteRecord('+index5+')" src="<?php echo BASE_URL; ?>/images/icon/delete.gif" /></td>';
+	}
+	template+='<td  width="2%">'+index5+'</td>';
+	template+='<td width="20%"><select class="form-control select2me" Onchange="ShowPopupProduct('+ index5 + ');" id="item_id_'+index5+'" name="item_id_'+index5+'" >'+option5+'<option></option></select>'+inp+'</td>';
+	template+='<td><input style="background:#f5e1e1;" readonly type="text" class="form-control" id="current_qty'+index5+'" name="current_qty'+index5+'" /></td>';
+	template+='<td ><input type="text" onkeyup="totalQty('+index5+')" class="validate[required,custom[number]] input form-control" required="1" value="1" id="qty_unit_'+index5+'" name="qty_unit_'+index5+'" /></td>';
+	template+='<td ><input type="text" onkeyup="totalQty('+index5+')" class="validate[required,custom[number]] input form-control" value="0" id="qty_per_unit_'+index5+'" name="qty_per_unit_'+index5+'" /></td>';
+	template+='<td ><input type="text" onkeyup="calculatePrice('+index5+')" class="form-control" required="1" id="qty'+index5+'" name="qty'+index5+'"/></td>';
+	template+='<td ><input type="text" onkeyup="calculatePrice('+index5+')" class="validate[required,custom[number]] input form-control" id="price'+index5+'" name="price'+index5+'" /><input type="hidden" id="oldprice_'+index5+'" name="oldprice_'+index5+'"/></td>';
+	template+='<td ><input type="text" class="form-control" readonly="readonly" id="total'+index5+'" name="total'+index5+'" /></span></td>';
+	template+='<td ><input type="text" class="form-control" id="remark'+index5+'" name="remark'+index5+'" /></span></td>';
+	template+="</tr>";
+	$('#table_order').append(template);
+	
+	$("#item_id_"+index5).val("<?php echo $r['pro_id'];?>");
+	$("#qty"+index5).val("<?php echo $r['qty_order'];?>");
+	$("#qty_unit_"+index5).val("<?php echo $r['qty_unit'];?>");
+	
+	$("#qty_per_unit_"+index5).val("<?php echo $r['qty_detail'];?>");
+	$("#total"+index5).val("<?php echo $r['sub_total'];?>");
+	$("#price"+index5).val("<?php echo $r['price'];?>");
+	$("#oldprice_"+index5).val("<?php echo $r['price'];?>");
+	//$("#dis_value"+index5).val("<?php echo $r['disc_value'];?>");
+	
+	//getQtyById(index5);
+	
+
+	if($('#identity').val()!="") {
+		var identity = $('#identity').val();
+		$('#identity').val(identity+','+index5);
+	} else {$('#identity').val(index5);}
+	
+	$("#row_order_0").remove();
+		<?php } }?>
 }
 term_option = '<?php echo $this->term_opt; ?>';
 index1 = 0;

@@ -184,11 +184,14 @@ class Sales_Form_FrmRequest extends Zend_Form
     			$idElement = new Zend_Form_Element_Hidden('id');
     			$this->addElement($idElement);
     			$idElement ->setValue($data["id"]);
-    			
-    			$customerid->setValue($data["customer_id"]);
+				
+				$old_location = new Zend_Form_Element_Hidden('old_location');
+    			$this->addElement($old_location);
+    			$old_location ->setValue($data["branch_id"]);
+				
+    			$request_by->setValue($data["request_name"]);
     			$locationID->setValue($data['branch_id']);
-    			
-    			$currencyElement->setValue($data['currency_id']);
+    			$requstman_pos->setValue($data['position']);
     			$saleagent_id->setValue($data['saleagent_id']);
     			$descriptionElement->setValue($data['remark']);
     			$dateOrderElement->setValue(date("m/d/Y",strtotime($data['date_sold'])));
@@ -196,7 +199,7 @@ class Sales_Form_FrmRequest extends Zend_Form
     			$totalAmountElement->setValue($data['all_total']);
     			$dis_valueElement->setValue($data['discount_value']);
     			$allTotalElement->setValue($data['net_total']);
-    		
+				$plan->setValue($data["plan_id"]);
     		} else {
     	}
      	return $this;

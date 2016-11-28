@@ -53,6 +53,11 @@ class RsvAcl_Model_DbTable_DbUser extends Zend_Db_Table_Abstract
   		if(!$row) return NULL;
   		return $row;
 	}
+	function getUserById($user_id){
+		$db=$this->getAdapter();
+		$sql="SELECT * FROM tb_acl_user where user_id=$user_id";
+		return $db->fetchRow($sql);
+	}
 	//function get user id from database
 	public function getUserID($username)
 	{
@@ -115,7 +120,7 @@ class RsvAcl_Model_DbTable_DbUser extends Zend_Db_Table_Abstract
      			"email"			=>	$arr["email"],
      			"user_type_id"	=>	$arr["user_type_id"],
      			"LocationId"	=>	$arr["LocationId"],
-     			"status"		=>	1,
+     			"status"		=>	$arr["status"],
      			"created_date"	=>	date("Y-m-d H:i:s")
      			);
      	$id=$this->insert($array_data);
@@ -127,7 +132,7 @@ class RsvAcl_Model_DbTable_DbUser extends Zend_Db_Table_Abstract
      					"user_id"=>$id,
      					"location_id"=>$arr["location_id_".$i]
      			);
-     			$db->insert("rsv_acl_ubranch", $_arrdata);
+     			$db->insert("tb_acl_ubranch", $_arrdata);
      		}
      	}
      	$_arrdata = array(
@@ -139,7 +144,7 @@ class RsvAcl_Model_DbTable_DbUser extends Zend_Db_Table_Abstract
 	}
 	public function getUserBranchExist($user_id, $location_id){
 		$db=$this->getAdapter();
-		$sql="SELECT user_loca FROM rsv_acl_ubranch WHERE user_id = $user_id AND location_id = $location_id LIMIT 1";
+		$sql="SELECT user_loca FROM tb_acl_ubranch WHERE user_id = $user_id AND location_id = $location_id LIMIT 1";
 		$row=$db->fetchRow($sql);
 		return $row;
 	}
@@ -152,17 +157,17 @@ class RsvAcl_Model_DbTable_DbUser extends Zend_Db_Table_Abstract
 					"title"			=>	$arr["title"],
 					"fullname"		=>	$arr["fullname"],
 					"username"		=>	$arr["username"],
-					"password"		=>	$arr['password'],
+					//"password"		=>	$arr['password'],
 					"email"			=>	$arr["email"],
 					"user_type_id"	=>	$arr["user_type_id"],
 					"LocationId"	=>	$arr["LocationId"],
-					"status"		=>	1,
+					"status"		=>	$arr["status"],
 					"created_date"	=>	date("Y-m-d H:i:s")
 			);
 			$where=$this->getAdapter()->quoteInto('user_id=?',$user_id);
 			$id=$this->update($data, $where);
 			$ids = explode(",", $arr["identity"]);
-			$db->query("DELETE FROM rsv_acl_ubranch WHERE user_id = $user_id");
+			$db->query("DELETE FROM tb_acl_ubranch WHERE user_id = $user_id");
 			foreach ($ids as $i){
 				$exist=$this->getUserBranchExist($user_id, $arr["location_id_".$i]);
 				if($exist=="" AND $arr["LocationId"]!==$arr["location_id_".$i]){
@@ -170,7 +175,7 @@ class RsvAcl_Model_DbTable_DbUser extends Zend_Db_Table_Abstract
 							"user_id"=>$user_id,
 							"location_id"=>$arr["location_id_".$i]
 					);
-					$db->insert("rsv_acl_ubranch", $_arrdata);
+					$db->insert("tb_acl_ubranch", $_arrdata);
 				}
 					
 			}
@@ -178,12 +183,14 @@ class RsvAcl_Model_DbTable_DbUser extends Zend_Db_Table_Abstract
 					"user_id"=>$user_id,
 					"location_id"=>$arr["LocationId"]
 			);
-			$db->insert("rsv_acl_ubranch", $_arrdata);
+			$db->insert("tb_acl_ubranch", $_arrdata);
 			
 			$db->commit();
 		}
 		catch (Exception $e){
 			$db->rollBack();
+			$err = $e->getMessage();
+			Application_Model_DbTable_DbUserLog::writeMessageError($err);
 		}
 		
 		

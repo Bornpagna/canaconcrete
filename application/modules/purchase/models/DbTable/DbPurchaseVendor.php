@@ -1613,8 +1613,6 @@ class purchase_Model_DbTable_DbPurchaseVendor extends Zend_Db_Table_Abstract
     	$db=$this->getAdapter();
     	$sql="SELECT id,pro_id,location_id,qty,qty_warning,last_mod_date,last_mod_userid
     	 FROM tb_prolocation WHERE pro_id =".$pro_id." AND location_id=".$location_id." LIMIT 1 "; 
-
-    	
     	$row = $db->fetchRow($sql);
     	
     	if(empty($row)){

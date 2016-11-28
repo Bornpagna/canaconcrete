@@ -37,11 +37,14 @@ class Purchase_ReceiveController extends Zend_Controller_Action
 			Application_Model_Decorator::removeAllDecorator($formFilter);
 	}
 	public function addAction(){
-		
+		$id = $this->getRequest()->getParam('id');
+		$db = new Purchase_Model_DbTable_DbRecieve();
+		$db_p = new Purchase_Model_DbTable_DbPurchaseVendor();
+		$row = $db_p->getPurchaseById($id);
 		if($this->getRequest()->isPost()){
 			try{
 				$data = $this->getRequest()->getPost();
-				$db = new Purchase_Model_DbTable_DbRecieve();
+				
 				$db->add($data);
 				if(isset($data["save_close"])){
 					Application_Form_FrmMessage::Sucessfull("INSERT_SUCCESS", "/purchase/receive");
@@ -54,9 +57,9 @@ class Purchase_ReceiveController extends Zend_Controller_Action
 				Application_Model_DbTable_DbUserLog::writeMessageError($err);
 			}
 		}
-		
+		$this->view->item = $db->getItemByPuId($id);
 		$frm_purchase = new Purchase_Form_FrmRecieve(null);
-		$form_add_purchase = $frm_purchase->add(null);
+		$form_add_purchase = $frm_purchase->add($row);
 		Application_Model_Decorator::removeAllDecorator($form_add_purchase);
 		$this->view->form_purchase = $form_add_purchase;
 	}

@@ -125,8 +125,13 @@
 							</div>
 						</div>
 						<div class="form-group" >
-						<label class="control-label col-md-6">
+						<label class="control-label col-md-2"><?php echo $tr->translate("STATUS");?>
 						</label>
+						<div class="col-md-4">
+								<div class="input-icon right">
+									<?php echo $form->getElement("status");?>
+								</div>
+							</div>
 						<label class="control-label col-md-2">
 						<input type="hidden" id="identity" name="identity" />
 									<button class="btn btn-primary" type="button" id="new_item" onclick="addRow(1);" name="new_followup" value="New">

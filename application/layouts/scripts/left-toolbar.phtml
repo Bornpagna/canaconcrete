@@ -32,6 +32,8 @@
 	$url_invocie_approved = array($this->url(array('module'=>'sales','controller'=>'invoiceapprove','action'=>'index'),null, true), "MENU_APPROVED");
 	$url_qoute_approved = array($this->url(array('module'=>'sales','controller'=>'quoteapprove','action'=>'index'),null, true), "MENU_QOUTEAPPROVED");
 	
+	$url_sales_request_list = array($this->url(array('module'=>'sales','controller'=>'index','action'=>'requestlist'),null, true), "MENU_REQUEST_LIST");
+	
 	$url_sales_add = array($this->url(array('module'=>'sales','controller'=>'index','action'=>'add'),null, true), "MENU_SALES_SALES_ORDER_ADD_CUSTOMER_ORDER");
 	$url_quotelist = array($this->url(array('module'=>'sales','controller'=>'quoatation','action'=>'index'),null, true), "QUOTATION_LIST");
 	$url_sales_quote = array($this->url(array('module'=>'sales','controller'=>'quoatation','action'=>'add'),null, true), "MENU_SALES_SALES_ORDER_ADD_CUSTOMER_QUOTE");
@@ -234,7 +236,12 @@
             			<a href="<?php echo $url_sales_list[0]; ?>">
 						    <i class="icon-arrow-right"></i><?php echo $tr->translate($url_sales_list[1]);?>
 	            		</a>
-            		</li> 
+            		</li>
+					<li>
+            			<a href="<?php echo $url_sales_request_list[0]; ?>">
+						    <i class="icon-arrow-right"></i><?php echo $tr->translate($url_sales_request_list[1]);?>
+	            		</a>
+            		</li>					
 					<!--
             		<li>
             			<a href="<?php //echo $url_sales_add[0]; ?>">
@@ -263,33 +270,33 @@
             			<a href="<?php echo  $url_return_out[0]; ?>">
 	            			<i class="icon-arrow-right"></i><?php echo $tr->translate($url_return_out[1]);?>
 	            		</a>
-            		</li> -->
+            		</li>
             		<li>
             			<a href="<?php echo $url_quotelist[0]; ?>">
 	            			<i class="icon-arrow-right"></i><?php echo $tr->translate($url_quotelist[1])?>
 	            	</a>
-            		</li> 
+            		</li>  -->
 					<!--
             		<li>
             			<a href="<?php //echo $url_sales_quote[0]; ?>">
 	            			<i class="icon-arrow-right"></i><?php //echo $tr->translate($url_sales_quote[1])?>
 	            		</a>
-            		</li>-->
+            		</li>
             		<li>
             			<a href="<?php echo $url_invocie_approved[0]; ?>">
 	            			<i class="icon-arrow-right"></i><?php echo $tr->translate($url_invocie_approved[1])?>
 	            		</a>
-            		</li>
+            		</li>-->
             		<!-- <li>
             			<a href="<?php //echo $url_sales_approved[0]; ?>">
 	            			<i class="icon-arrow-right"></i><?php //echo $tr->translate($url_sales_approved[1])?>
 	            		</a>
-            		</li> -->
+            		</li> 
 	            	<li>
             			<a href="<?php echo $url_qoute_approved[0]; ?>">
 	            			<i class="icon-arrow-right"></i><?php echo $tr->translate($url_qoute_approved[1])?>
 	            	</a>
-	            	</li>
+	            	</li>-->
 	            	<li>
             			<a href="<?php echo $url_cust_list[0]; ?>">
 						    <i class="icon-arrow-right"></i><?php echo $tr->translate($url_cust_list[1]);?>

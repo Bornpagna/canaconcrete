@@ -235,61 +235,99 @@
 </div>
 
 <script>
-var index5 = 0;num=0;
-var option5 = '<?php echo $this->items; ?>';
-var baseUrl = '<?php echo BASE_URL; ?>';
-var template = '';
-var value = '';
-pqty = 1;
-var index=1;
-function addRow(item_id) {
-	index5++; //var first = index5;
+$(document).ready(function() {
+	initList();
+	//initListTermcondition();
+});
+index=0;
+function initList() {
+	index5=0;
+	var template;
+	var option5 = '<?php echo $this->items;?>';
+	<?php if(!empty($this->item)) {
+		foreach($this->item AS $i=>$r){?>
+	index5++; 
 	index=index+1;
-	for(i=1; i<index5; i++){
-		new_item=parseInt(item_id);
-		items = parseInt($("#item_id_"+i).val());
-	}
 	template='<tr id="row_order_'+index5+'" style="height:33px;">';
 	var inp = '';
-	if(index5 == 1) {
-		template+='<td >&nbsp;</td>';
-	} else {
-		template+='<td ><img onClick="deleteRecord('+index5+')" src="<?php echo BASE_URL; ?>/images/icon/delete.gif" /></td>';
-	}
-	template+='<td  width="2%">'+index5+'</td>';
-	template+='<td width="30%"><select class="form-control select2me" Onchange="ShowPopupProduct('+ index5 + ');" id="item_id_'+index5+'" name="item_id_'+index5+'" >'+option5+'<option></option></select>'+inp+'</td>';
-	template+='<td ><input type="checkbox" onkeyup="getPriceFree('+index5+')" id="pricefree_'+index5+'" name="pricefree_'+index5+'"/> </td>';
-	template+='<td ><input type="text" onkeyup="totalQty('+index5+')" class="validate[required,custom[number]] input form-control" required="1" value="1" id="qty_unit_'+index5+'" name="qty_unit_'+index5+'" /></td>';
-	template+='<td ><input type="text" onkeyup="totalQty('+index5+')" class="validate[required,custom[number]] input form-control" value="0" id="qty_per_unit_'+index5+'" name="qty_per_unit_'+index5+'" /></td>';
-	template+='<td ><input type="text" onkeyup="calculatePrice('+index5+')" class="form-control" required="1" id="qty'+index5+'" name="qty'+index5+'"/></td>';
-	template+='<td ><input type="text" onkeyup="calculatePrice('+index5+')" required="1" class="validate[required,custom[number]] input form-control" id="price'+index5+'" name="price'+index5+'" /><input type="hidden" id="oldprice_'+index5+'" name="oldprice_'+index5+'"/></td>';
-	template+='<td  width="5%"><input type="text" onkeyup="calculatePrice('+index5+')" value="0" id="dis_value'+index5+'" name="dis_value'+index5+'" class="form-control" /><input type="hidden" id="olddis_value_'+index5+'" name="olddis_value_'+index5+'"/><input type="hidden" readonly="readonly" class="input70px" id="real-value'+index5+'" name="real-value'+index5+'" /></td>';
-	template+='<td ><input type="text" class="form-control" readonly="readonly" id="total'+index5+'" name="total'+index5+'" /></span></td>';
-	template+="</tr>";
+	
+		template+='<td  width="1%">'+index5+'</td>';
+		template+='<td width="30%"><?php echo $r['item_name'];?><input type="hidden" name="item_id_'+index5+'" id="item_id_'+index5+'" /></td>';
+		template+='<td ><input type="text" class="form-control" required="1" readOnly="readOnly" value="" id="qty_order_'+index5+'" name="qty_order_'+index5+'" /></td>';
+		template+='<td ><input type="text" class="validate[required,custom[number]] input form-control" onKeyup="calculatePrice('+index5+')" value="" id="qty_recieve_'+index5+'" name="qty_recieve_'+index5+'" /></td>';
+		template+='<td ><input type="text" class="form-control" id="remark_'+index5+'" name="remark_'+index5+'" /> <input type="hidden" name="price_'+index5+'" id="price_'+index5+'" value="" /> <input type="hidden" name="total_after_'+index5+'" id="total_after_'+index5+'" value="" /><input type="hidden" name="total_'+index5+'" id="total_'+index5+'" value="" /><input type="hidden" value="" id="dis_value'+index5+'" name="dis_value'+index5+'" class="form-control" /><input type="hidden" name="sub_total_receive_'+index5+'" id="sub_total_receive_'+index5+'" /> </td>';
+		template+="</tr>";
 	$('#table_order').append(template);
+	
+	$("#item_id_"+index5).val("<?php echo $r['pro_id'];?>");
+	$("#qty_order_"+index5).val("<?php echo $r['qty_order'];?>");
+	$("#qty_recieve_"+index5).val("<?php echo $r['qty_order'];?>");
+	
+	$("#total_after_"+index5).val("<?php echo $r['sub_total'];?>");
+	$("#sub_total_receive_"+index5).val("<?php echo $r['sub_total'];?>");
+	
+	$("#total_"+index5).val("<?php echo $r['sub_total'];?>");
+	$("#price_"+index5).val("<?php echo $r['price'];?>");
+	$("#oldprice_"+index5).val("<?php echo $r['price'];?>");
+	$("#dis_value"+index5).val("<?php echo $r['disc_value'];?>");
+	
+	//getQtyById(index5);
+	
+
 	if($('#identity').val()!="") {
 		var identity = $('#identity').val();
 		$('#identity').val(identity+','+index5);
 	} else {$('#identity').val(index5);}
-	$("#item_id_"+index5).val(item_id);
-
-	getQtyById(index5);
-
-	if(free.checked){
-		$("#pricefree_"+index5).attr({checked:'checked'});  
-		$("#price"+index5).val(0);
-		$("#price"+index5).attr('readonly','readonly');
-		$("#dis-value"+index5).attr('readonly','readonly');
-		$("#dis-value"+index5).val(0);
-	}
-	else{
-		//$("#dis-value"+index5).val(0);
-		//$('#dis_value').val(0);
-		$('#global_disc').val(0);
-		//getCurrentPrice(index5);
-		$("#paid").val(0);
-	}
+	
 	$("#row_order_0").remove();
+		<?php } }?>
+}
+
+<?php $url_pu =  $this->url(array('module'=>'purchase','controller'=>'receive','action'=>'get-purchase-item')); ?>
+function getItem(){
+	var id = $('#pu_code').val();
+	if(id=="" || id ==null){
+		return false;
+	}else{
+		$.ajax({
+			url:"<?php echo $url_pu;?>",
+			type:"post",
+			data:{'id':id},
+			success: function(data){
+				//alert(data);
+				values = $.parseJSON(data);
+				num=0;
+				
+				if(values=="" || values==null){
+					//alert("No Result!");
+				}else{
+					for(i=0;i<=values.length;i++){
+						item_name = values[i].item_name;
+						qty_order = values[i].qty_order;
+						price = values[i].price;
+						sub_total = values[i].sub_total;
+						disc_value = values[i].disc_value;
+						num++;
+						template='<tr id="row_order_'+num+'" style="height:33px;">';
+						template+='<td  width="2%">'+num+'</td>';
+						template+='<td width="30%">'+item_name+'<input type="hidden" name="item_id_'+num+'" id="item_id_'+num+'" /></td>';
+						template+='<td ><input type="text" class="validate[required,custom[number]] input form-control" required="1" readOnly="readOnly" value="'+qty_order+'" id="qty_order_'+num+'" name="qty_order_'+num+'" /></td>';
+						template+='<td ><input type="text" class="validate[required,custom[number]] input form-control" onKeyup="calculatePrice('+num+')" value="'+qty_order+'" id="qty_recieve_'+num+'" name="qty_recieve_'+num+'" /></td>';
+						template+='<td ><input type="text" class="form-control" id="remark_'+num+'" name="remark_'+num+'" /> <input type="hidden" name="price_'+num+'" id="price_'+num+'" value="'+price+'" /> <input type="hidden" name="total_after_'+num+'" id="total_after_'+num+'" value="'+sub_total+'" /><input type="hidden" name="total_'+num+'" id="total_'+num+'" value="'+sub_total+'" /><input type="hidden" value="'+disc_value+'" id="dis_value'+num+'" name="dis_value'+num+'" class="form-control" /><input type="hidden" name="sub_total_receive_'+num+'" id="sub_total_receive_'+num+'" /> </td>';
+						template+="</tr>";
+						$('#table_order').innerHTML = template;
+						if($('#identity').val()!="") {
+							var identity = $('#identity').val();
+							$('#identity').val(identity+','+num);
+						} else {$('#identity').val(num);}
+						//$("#item_id_"+num).val(item_id);
+					}
+				}
+			},
+			error:function(){
+			}
+		});
+	}	
 }
 <?php $url_qty =  $this->url(array('module'=>'purchase','controller'=>'index','action'=>'getqtybyid')); ?>
 function getQtyById(index){//use
@@ -720,6 +758,7 @@ function getItem(){
 		});
 	}	
 }
+>>>>>>> .r15
 function doAmoutReceive(num){
 	qty = $('#qty_recieve_'+num).val();
 	price = $('#price'+num).val();
