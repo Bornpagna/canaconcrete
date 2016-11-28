@@ -158,6 +158,8 @@ public function add($data=null) {
     	if($data != null) {
 	       $branch->setValue($data["branch_id"]);
 		   $pu_code->setValue($data["order_number"]);
+		   $vendor->setValue($data["vendor_id"]);
+		   $date_order->setValue($data[""]);
     	}
     	return $this;
 	}
