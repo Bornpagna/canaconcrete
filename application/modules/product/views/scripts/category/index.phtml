@@ -1,6 +1,6 @@
 <?php 
 	$url_new = $this->url(array('module'=>'product','controller'=>'category','action'=>'add',));
-	$url_edit = $this->url(array('module'=>'product','controller'=>'category','action'=>'edit',));
+	$url_edit = $this->url(array('module'=>'product','controller'=>'category','action'=>'edit'), null, true);
 	$url_delete = $this->url(array('module'=>'product','controller'=>'category','action'=>'delete',));
 	$tr = Application_Form_FrmLanguages::getCurrentlanguage();
 	$formFilter = $this->formFilter;
@@ -57,7 +57,7 @@
 								<tr class="odd gradeX">
 									<td width="3%"><?php echo $key+1;?></td>
 									<td><?php echo $row["name"]?></td>
-									<td><?php echo $row["parent_id"]?></td>
+									<td><?php echo $row["parent_name"]?></td>
 									<td>
 										<?php if($row["status"] == 1){?>
 										<span class="label label-sm label-success"><?php echo $tr->translate("ACTIVE");?> </span>

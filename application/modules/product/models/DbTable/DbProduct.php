@@ -355,8 +355,8 @@ class Product_Model_DbTable_DbProduct extends Zend_Db_Table_Abstract
     			'measure_id'	=>	$data["measure"],
     			'size_id'		=>	$data["size"],
     			'serial_number'	=>	$data["serial"],
-    			'qty_perunit'	=>	$data["qty_unit"],
-    			'unit_label'	=>	$data["label"],
+//     			'qty_perunit'	=>	$data["qty_unit"],
+//     			'unit_label'	=>	$data["label"],
     			'user_id'		=>	$this->getUserId(),
     			'note'			=>	$data["description"],
     			'status'		=>	$data["status"],
@@ -384,8 +384,8 @@ class Product_Model_DbTable_DbProduct extends Zend_Db_Table_Abstract
     		}
     		// For Product Price
     		if(!empty($data['identity_price'])){
-    			$identitys = explode(',',$data['identity_price']);
-    			foreach($identitys as $i)
+    			$identityss = explode(',',$data['identity_price']);
+    			foreach($identityss as $i)
     			{
     				$arr2 = array(
     						'pro_id'			=>	$id,
@@ -424,8 +424,8 @@ class Product_Model_DbTable_DbProduct extends Zend_Db_Table_Abstract
     				'measure_id'	=>	$data["measure"],
     				'size_id'		=>	$data["size"],
     				'serial_number'	=>	$data["serial"],
-    				'qty_perunit'	=>	$data["qty_unit"],
-    				'unit_label'	=>	$data["label"],
+//     				'qty_perunit'	=>	$data["qty_unit"],
+//     				'unit_label'	=>	$data["label"],
     				'user_id'		=>	$this->getUserId(),
     				'note'			=>	$data["description"],
     				'status'		=>	$data["status"],

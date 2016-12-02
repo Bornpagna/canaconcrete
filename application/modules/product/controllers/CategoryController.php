@@ -29,7 +29,9 @@ public function init()
 			$data = $this->getRequest()->getPost();
 			$db = new Product_Model_DbTable_DbCategory();
 			$db->add($data);
-			if($data['saveclose']){
+			if(isset($data['btnsavenew'])){
+				Application_Form_FrmMessage::Sucessfull("INSERT_SUCCESS", '/product/category/add');
+			}else{
 				Application_Form_FrmMessage::Sucessfull("INSERT_SUCCESS", '/product/category/index');
 			}
 		}

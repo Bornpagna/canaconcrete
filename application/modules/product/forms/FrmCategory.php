@@ -51,6 +51,16 @@ class Product_Form_FrmCategory extends Zend_Form
 		));
 		
 		if($data != null){
+			$row_cate = $db->getAllCategory();
+			if(!empty($row_cate)){
+				foreach ($row_cate as $rs){
+						if($rs["id"]==$data["id"]){
+						}else{
+							$opt[$rs["id"]] = $rs["name"];
+						}
+				}
+				$parent->setMultiOptions($opt);
+			}
 			$name->setValue($data["name"]);
 			$parent->setValue($data["parent_id"]);
 			$remark->setValue($data["remark"]);

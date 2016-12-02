@@ -3,6 +3,9 @@ $user_info = new Application_Model_DbTable_DbGetUserInfo();
 $result = $user_info->getUserInfo();
 $tr = Application_Form_FrmLanguages::getCurrentlanguage();
 $session_user=new Zend_Session_Namespace('auth');
+// $last_name=$session_user->last_name;
+// $username = $session_user->first_name;
+// echo $last_name.''.$username;exit();
 $request=Zend_Controller_Front::getInstance()->getRequest();
 ?>
 	<div class="page-header-inner">
@@ -274,12 +277,15 @@ $request=Zend_Controller_Front::getInstance()->getRequest();
 					<a href="#" class="dropdown-toggle" data-toggle="dropdown" data-hover="dropdown" data-close-others="true">
 					<img alt="" class="img-circle" src="<?php echo $this->baseUrl()?>/assets/admin/layout/img/avatar3_small.jpg"/>
 					<span class="username username-hide-on-mobile">
-					<?php echo $session_user->fullname;?> </span>
+					<?php echo $session_user->fullname;
+					     $id=$session_user->user_id;
+					     $user_pro=$this->url(array("module"=>"rsvacl","controller"=>"index","action"=>"user-profile"), null, true);
+					?> </span>
 					<i class="fa fa-angle-down"></i>
 					</a>
 					<ul class="dropdown-menu dropdown-menu-default">
 						<li>
-							<a href="#">
+							<a href="<?php echo $user_pro."/id/".$id;?>">
 							<i class="icon-user"></i> My Profile </a>
 						</li>
 						<li>

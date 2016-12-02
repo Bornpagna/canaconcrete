@@ -14,7 +14,10 @@ class Rsvacl_UsertypeController extends Zend_Controller_Action
     {
     	$tr = Application_Form_FrmLanguages::getCurrentlanguage();
         $getUser = new Rsvacl_Model_DbTable_DbUserType();
-        $userQuery = "SELECT u.user_type_id,u.user_type,(SELECT u1.user_type FROM `tb_acl_user_type` u1 WHERE u1.user_type_id = u.parent_id LIMIT 1) parent_id FROM `tb_acl_user_type` u";
+        $userQuery = "SELECT u.user_type_id,u.user_type,(SELECT u1.user_type FROM `tb_acl_user_type` u1 
+                     WHERE u1.user_type_id = u.parent_id LIMIT 1) parent_id FROM `tb_acl_user_type` u ORDER BY user_type_id DESC";
+        $order=" ORDER BY user_type_id DESC";
+         
         $rows = $getUser->getUserTypeInfo($userQuery);
         if($rows){
         	$link = array("rsvacl","usertype","edit");

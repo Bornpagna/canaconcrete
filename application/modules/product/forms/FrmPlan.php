@@ -11,8 +11,8 @@ class Product_Form_FrmPlan extends Zend_Form
 	///From plan 
 	function frmPlanType($data=null){
 		$db = new Product_Model_DbTable_DbPlan();
-		getStatus()
-		$name_type = new Zend_Form_Element_Text("nametype");
+		getStatus();
+		 $name_type= new Zend_Form_Element_Text("nametype");
 		$name_type->setAttribs(array(
 				'class'=>'form-control',
 				//'required'=>'required'

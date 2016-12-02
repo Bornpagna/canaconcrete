@@ -2,10 +2,12 @@
 
 class Rsvacl_UserController extends Zend_Controller_Action
 {
+	
     public function init()
     {
         /* Initialize action controller here */
     	defined('BASE_URL')	|| define('BASE_URL', Zend_Controller_Front::getInstance()->getBaseUrl());
+    	$tr = Application_Form_FrmLanguages::getCurrentlanguage();
     }
 
     public function indexAction()
@@ -44,10 +46,11 @@ class Rsvacl_UserController extends Zend_Controller_Action
         $userQuery = "select `user_id`,fullname,`username`,
         (SELECT user_type FROM `tb_acl_user_type`  WHERE user_type_id=tb_acl_user.user_type_id) AS user_type,
         (SELECT name FROM `tb_sublocation` WHERE id=LocationId) AS branch_name,
-        `created_date`,`modified_date`,`status` from tb_acl_user WHERE 1";
+        `created_date`,`modified_date`,`status` from tb_acl_user WHERE 1  ";
 		//echo $userQuery.$where;
-        $userQuery = $userQuery.$where;
-        
+        $order=" ORDER BY user_id DESC";
+        $userQuery = $userQuery.$where.$order;
+       
         $rows = $getUser->getUserInfo($userQuery);
         if($rows){
         	$imgnone='<img src="'.BASE_URL.'/images/icon/none.png"/>';
@@ -83,6 +86,7 @@ class Rsvacl_UserController extends Zend_Controller_Action
     		$this->view->rs=$rs;
     	}  	 
     	
+    	
     }
 	public function addAction()
 	{		
@@ -94,6 +98,9 @@ class Rsvacl_UserController extends Zend_Controller_Action
 			{
 				$id=$db->insertUser($post);
 				$tr = Application_Form_FrmLanguages::getCurrentlanguage();
+				if(isset($post['btnsavenew'])){
+					$this->_redirect('/rsvacl/user/add');
+				}
 				$this->_redirect('/rsvacl/user/index');
 			}
 			else {
@@ -104,6 +111,10 @@ class Rsvacl_UserController extends Zend_Controller_Action
 		$this->view->form=$form;
 		Application_Model_Decorator::removeAllDecorator($form);
 		
+		$formShowAgent = $form->showSaleAgentForm(null);
+		Application_Model_Decorator::removeAllDecorator($formShowAgent);
+		$this->view->form_user_detail = $formShowAgent;
+		
 		$items = new Application_Model_GlobalClass();
 		$locationRows = $items->getLocationAssign();
 		$this->view->locations = $locationRows;
@@ -113,7 +124,6 @@ class Rsvacl_UserController extends Zend_Controller_Action
 		Application_Model_Decorator::removeAllDecorator($frm_poup);
 		$this->view->popup_location = $frm_poup;
 		
-		
 	}
 	// Edit user
     public function editAction()
@@ -122,10 +132,17 @@ class Rsvacl_UserController extends Zend_Controller_Action
     	if(!$user_id)$user_id=0;
    		$form = new Rsvacl_Form_FrmUser();
     	$db = new Rsvacl_Model_DbTable_DbUser();
+    	$detail=$db->getUserDetailById($user_id);
 		$rs = $db->getUserById($user_id);
+		$this->view->rs=$rs;
 		//Application_Model_Decorator::setForm($form, $rs);
 		
     	$this->view->form = $form->init($rs);
+    	
+    	$formShowAgent = $form->showSaleAgentForm($detail);
+    	Application_Model_Decorator::removeAllDecorator($formShowAgent);
+    	$this->view->form_user_detail = $formShowAgent;
+    	
     	$this->view->user_id = $user_id;
     	
     	$rsloc = $db->getUserInfo('SELECT * FROM tb_acl_ubranch where user_id='.$user_id ." GROUP BY location_id ");
@@ -139,9 +156,6 @@ class Rsvacl_UserController extends Zend_Controller_Action
 		{
 			$post=$this->getRequest()->getPost();
 			$db->updateUser($post,$user_id);
-// 			$tr = Application_Form_FrmLanguages::getCurrentlanguage();
-// 			Application_Form_FrmMessage::message($tr->translate('ROW_AFFECTED'));
-// 			Application_Form_FrmMessage::redirector('/Rsvacl/user/index');
 			$this->_redirect('/rsvacl/user/index');
 		}
 		Application_Model_Decorator::removeAllDecorator($form);

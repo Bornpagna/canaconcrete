@@ -78,6 +78,7 @@ class purchase_Model_DbTable_DbPurchaseVendor extends Zend_Db_Table_Abstract
 
 			
 			if($data["status"]==5 OR $data["status"]==4){
+				 
 				$sqls = "SELECT * FROM tb_setting WHERE `code`=16 ";
 				$ro = $db_global->getGlobalDbRow($sqls);
 				$RO = $ro["key_value"];

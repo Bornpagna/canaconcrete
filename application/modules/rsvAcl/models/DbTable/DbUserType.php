@@ -136,5 +136,88 @@ class Rsvacl_Model_DbTable_DbUserType extends Zend_Db_Table_Abstract
 		$where=$this->getAdapter()->quoteInto('user_id=?',$user_id);
 		$this->update($data,$where);
 	}
+	function  getUserProfileById($id){
+		$db=$this->getAdapter();
+		$sql="SELECT  u.user_id,u.fullname,u.username,u.email,u.photo,
+				        ud.pob,ud.dob,ud.phone,ud.address,ud.position,ud.decription
+				FROM tb_acl_user AS u,tb_acl_user_detail AS ud 
+				WHERE u.user_id=ud.user_id AND u.user_id=$id";
+		return $db->fetchRow($sql);
+	}
+	
+	//update user profile 
+	public function updateUser($arr)
+	{
+		//check update password
+		$id_user=$arr['id'];
+		if(!empty($arr['old_password']) && !empty($arr['password']) && !empty($arr['confirm_password'])){
+			$arr['password']=md5($arr['password']);
+			$arr['confirm_password']=md5($arr['confirm_password']);
+			
+			$arr=array(
+					"password"			=>	$arr["password"],
+					"confirm_pass"		=>	$arr["confirm_password"],
+			);
+			$this->_name="tb_acl_user";
+			$where=$this->getAdapter()->quoteInto('user_id=?',$id_user);
+			$this->update($arr, $where);
+		}else if(!empty($arr['olde_user_name'])){
+			
+			$photoname = str_replace(" ", "_", $arr['olde_user_name']).rand(). '.jpg';
+			$upload = new Zend_File_Transfer();
+			$upload->addFilter('Rename',
+					array('target' => PUBLIC_PATH . '/images/'. $photoname, 'overwrite' => true) ,'pic');
+			$receive = $upload->receive();
+			if($receive)
+			{
+				$arr['photo'] = $photoname;
+			}
+			else{
+				$arr['photo']=$arr['old_pic'];
+			}
+			$data = array(
+					"photo"		=>	$arr['photo'],
+			);
+			$where=$this->getAdapter()->quoteInto('user_id=?',$arr['id']);
+			$this->_name="tb_acl_user";
+			$id=$this->update($data, $where);
+			
+		}else{
+			try{
+				$db=$this->getAdapter();
+				$db->beginTransaction();
+				$data = array(
+						"fullname"		=>	$arr["full_name"],
+						"username"		=>	$arr["user_name"],
+						"email"			=>	$arr["email"],
+						"created_date"	=>	date("Y-m-d H:i:s"),
+						"modified_date" =>  date("Y-m-d H:i:s")
+				);
+				$where=$this->getAdapter()->quoteInto('user_id=?',$arr['id']);
+				$this->_name="tb_acl_user";
+				$id=$this->update($data, $where);
+				///inset to tb_acl_user_detail
+				$data = array(
+						"user_id"		=>  $arr['id'],
+						"phone"			=>	$arr["phone"],
+						"pob"			=>	$arr['pob'],
+						"dob"			=>	$arr["dob"],
+						"email"			=>	$arr["email"],
+						"decription"			=>	$arr["descript"],
+				);
+				$this->_name="tb_acl_user_detail";
+				$where="user_id=".$arr['id'];
+				$this->_name="tb_acl_user_detail";
+				$this->update($data,$where);
+				$db->commit();
+				//exit();
+			}
+			catch (Exception $e){
+				$db->rollBack();
+				$err = $e->getMessage();
+				Application_Model_DbTable_DbUserLog::writeMessageError($err);
+			}
+		}
+	}
 }
 

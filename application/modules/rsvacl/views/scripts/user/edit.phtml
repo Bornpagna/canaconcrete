@@ -1,3 +1,8 @@
+<style>
+       td.quater-input select {
+		    height: 32px;
+		}
+</style>
 <?php 
 $cancel_url=$this->url(array(
 		'module'=>'rsvacl',
@@ -13,7 +18,9 @@ $tr = Application_Form_FrmLanguages::getCurrentlanguage();
 $rowbranch=$this->branchname;
 ?>
 <title><?php echo $tr->translate("MENU_RSVACL_USER_EDIT_USER");?></title>
-<?php $form=$this->form;?>
+<?php $form=$this->form;
+      $frm_agent = $this->form_user_detail;
+?>
 <style>
 fieldset.fifthy {	
 	border-right: 0px;
@@ -118,8 +125,19 @@ table.user td{
 							</div>
 						</div>
 						<div class="form-group" >
-						<label class="control-label col-md-6">
-						</label>
+						 
+						   <label class="control-label col-md-2"><?php //echo $tr->translate("PHOTO");?><span class="required">
+								</span>
+							</label>
+							<div class="col-md-4">
+								<div class="input-icon right">
+									<i class="fa"></i>
+									<?php echo $frm_agent->getElement("signature");?>
+								<input type="hidden" name="old_pic" value="<?php echo $this->rs['photo'];?>" />
+								</div>
+								<img style="width:130px;height: 130px;" src="<?php echo $this->baseUrl();?>/images/<?php echo $this->rs['photo']?>" alt="Smiley face">  
+							</div>
+						   
 						<label class="control-label col-md-2">
 						<input type="hidden" id="identity" name="identity" />
 									<button class="btn btn-primary" type="button" id="new_item" onclick="addRow(1);" name="new_followup" value="New">
@@ -134,17 +152,117 @@ table.user td{
 								</table>
 							</label>
 						</div>
+					 
+						<h3 class="form-section"><?php echo $tr->translate("MENU_SALES_SALE_AGENT_ADD_SALE_AGENT_INFO");?></h3>
 						<div class="form-group">
+						<label class="control-label col-md-2">
+							<?php echo $tr->translate("DEPARTMENT");?><span class="required">
+								</span>
+							</label>
 							<div class="col-md-4">
 								<div class="input-icon right">
+									<i class="fa"></i>
+									<?php echo $frm_agent->getElement("department");?>
 								</div>
 							</div>
+						<label class="control-label col-md-2"><?php echo $tr->translate("AGENT_CODE");?><span class="required">
+								</span>
+							</label>
 							<div class="col-md-4">
-								<button type="submit" name="btnsavenew" class="btn blue btn-block btn-lg"><i class="fa fa-save"></i> <?php echo $tr->translate("SAVE_NEW")?> </button>
+								<div class="input-icon right">
+									<i class="fa"></i>
+									<?php echo $frm_agent->getElement("code");?>
+								</div>
 							</div>
+					</div>
+						<div class="form-group">
+							<label class="control-label col-md-2"><?php echo $tr->translate("USER_NAME");?> <span class="required">
+								</span>
+							</label>
 							<div class="col-md-4">
+								<div class="input-icon right">
+									<i class="fa"></i>
+									<?php echo $frm_agent->getElement("name");?>
+								</div>
+							</div>
+							<label class="control-label col-md-2">
+							<?php echo $tr->translate("CON_NUM");?><span class="required">
+								</span>
+							</label>
+							<div class="col-md-4">
+								<div class="input-icon right">
+									<i class="fa"></i>
+									<?php echo $frm_agent->getElement("phone");?>
+								</div>
 							</div>
 						</div>
+					
+					<div class="form-group">
+						<label class="control-label col-md-2"><?php echo $tr->translate("POB");?><span class="required">
+								</span>
+							</label>
+							<div class="col-md-4">
+								<div class="input-icon right">
+									<i class="fa"></i>
+									<?php echo $frm_agent->getElement("pob");?>
+								</div>
+							</div>
+							<label class="control-label col-md-2"><?php echo $tr->translate("DOB");?><span class="required">
+								</span>
+							</label>
+							<div class="col-md-4">
+								<div class="input-icon right">
+									<i class="fa"></i>
+									<?php echo $frm_agent->getElement('dob'); ?>
+								</div>
+							</div>
+					</div>
+					<div class="form-group">
+						<label class="control-label col-md-2">
+							<?php echo $tr->translate("CURRENT_ADD");?><span class="required"></span>
+							</label>
+							<div class="col-md-4">
+								<div class="input-icon right">
+									<i class="fa"></i><?php echo $frm_agent->getElement("address");?>
+								</div>
+							</div>
+						<label class="control-label col-md-2"><?php echo $tr->translate("EMAIL_ADD");?><span class="required">
+								</span>
+							</label>
+							<div class="col-md-4">
+								<div class="input-icon right">
+									<i class="fa"></i>
+									<?php echo $frm_agent->getElement("email_detail");?>
+								</div>
+							</div>
+					</div>
+					<div class="form-group">
+							<label class="control-label col-md-2"><?php echo $tr->translate("POSITION");?><span class="required">
+								</span>
+							</label>
+							<div class="col-md-4">
+								<div class="input-icon right">
+									<i class="fa"></i>
+									<?php echo $frm_agent->getElement("job_title");?>
+								</div>
+							</div>
+							<label class="control-label col-md-2"><?php echo $tr->translate("DESC");?><span class="required">
+								</span>
+							</label>
+							<div class="col-md-4">
+								<div class="input-icon right">
+									<i class="fa"></i>
+									<?php echo $frm_agent->getElement("description");?>
+								</div>
+							</div>
+					</div>
+					<div class="form-group">
+						<label  class="col-md-12 col-md-offset-4 col-md-8">
+							<a href="<?php echo $this->baseUrl();?>/rsvacl/user"><button type="button" class="btn red"><i class="fa fa-times"></i> <?php echo $tr->translate("GO_BACK")?></button></a>
+							<button type="submit" name="btnsavenew" class="btn btn-primary"><i class="fa fa-save"></i> <?php echo $tr->translate("SAVE_CLOSE")?> </button>
+							
+						</label>
+					</div>
 					</div>
 				</form>
 			</div>

@@ -12,6 +12,7 @@ class IndexController extends Zend_Controller_Action
   		$tr = Application_Form_FrmLanguages::getCurrentlanguage();
 		if($this->getRequest()->isPost()){
 			$formdata=$this->getRequest()->getPost();
+// 			print_r($formdata);exit();
 			$db_user=new Application_Model_DbTable_DbUsers();
 			$email=$formdata['txt_email'];
 			$password=$formdata['txt_password'];

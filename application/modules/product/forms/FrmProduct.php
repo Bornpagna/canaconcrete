@@ -115,7 +115,7 @@ class Product_Form_FrmProduct extends Zend_Form
 		$unit = new Zend_Form_Element_Text("unit");
 		$unit->setAttribs(array(
 				'class'=>'form-control',
-				//'required'=>'required'
+				'readonly'=>true
 		));
 		$unit->setValue(1);
 		 
