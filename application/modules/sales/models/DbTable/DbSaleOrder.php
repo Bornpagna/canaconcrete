@@ -85,8 +85,8 @@ class Sales_Model_DbTable_DbSaleOrder extends Zend_Db_Table_Abstract
 				$data_item= array(
 						'saleorder_id'	=> 	$sale_id,
 						'pro_id'	  	=> 	$data['item_id_'.$i],
-						'qty_unit'		=>	$data['qty_unit_'.$i],
-						'qty_detail'  	=> 	$data['qty_per_unit_'.$i],
+						//'qty_unit'		=>	$data['qty_unit_'.$i],
+						//'qty_detail'  	=> 	$data['qty_per_unit_'.$i],
 						'qty_order'	  	=> 	$data['qty'.$i],
 						'price'		  	=> 	$data['price'.$i],
 						'old_price'   	=>  $data['current_qty'.$i],

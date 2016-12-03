@@ -119,9 +119,7 @@
 									<th><?php echo $tr->translate("NUM");?></th>
 									<th style="white-space:nowrap;"><?php echo $tr->translate("ITEM_NAME");?></th>
 									<th><?php echo $tr->translate("CURRENT_QTY");?></th>
-									<!--  <th><?php //echo $tr->translate("FREE");?></th>-->
-									<th><?php echo $tr->translate("QTY_UNIT");?></th>
-									<th><?php echo $tr->translate("QTY_PER_UNIT");?></th>
+									 <th><?php echo $tr->translate("FREE");?></th>
 									<th><?php echo $tr->translate("QTY_ORDER");?></th>
 									<th><?php echo $tr->translate("UNIT_PRICE_CAP");?></th>
 									<th style="white-space:nowrap;"><?php echo $tr->translate("DISCOUNT");?></th>
@@ -416,13 +414,12 @@ function addRow(item_id) {
 	template+='<td  width="2%">'+index5+'</td>';
 	template+='<td width="30%"><select class="form-control select2me" Onchange="ShowPopupProduct('+ index5 + ');" id="item_id_'+index5+'" name="item_id_'+index5+'" >'+option5+'<option></option></select>'+inp+'</td>';
 	template+='<td><input style="background:#f5e1e1;" readonly type="text" class="form-control" id="current_qty'+index5+'" name="current_qty'+index5+'" /></td>';
-	//template+='<td ><input type="checkbox" onkeyup="getPriceFree('+index5+')" id="pricefree_'+index5+'" name="pricefree_'+index5+'"/> </td>';
-	template+='<td ><input type="text" onkeyup="totalQty('+index5+')" class="validate[required,custom[number]] input form-control" required="1" value="1" id="qty_unit_'+index5+'" name="qty_unit_'+index5+'" /></td>';
-	template+='<td ><input type="text" onkeyup="totalQty('+index5+')" class="validate[required,custom[number]] input form-control" value="0" id="qty_per_unit_'+index5+'" name="qty_per_unit_'+index5+'" /></td>';
-	template+='<td ><input type="text" onkeyup="calculatePrice('+index5+')" class="form-control" required="1" id="qty'+index5+'" name="qty'+index5+'"/></td>';
-	template+='<td ><input type="text" onkeyup="calculatePrice('+index5+')" class="validate[required,custom[number]] input form-control" id="price'+index5+'" name="price'+index5+'" /><input type="hidden" id="oldprice_'+index5+'" name="oldprice_'+index5+'"/></td>';
+	template+='<td><input type="checkbox" onkeyup="getPriceFree('+index5+')" id="pricefree_'+index5+'" name="pricefree_'+index5+'"/> </td>';
+	template+='<td><input type="text" onkeyup="calculatePrice('+index5+')" class="form-control" required="1" value="1" id="qty'+index5+'" name="qty'+index5+'"/></td>';
+	template+='<td><input type="text" onkeyup="calculatePrice('+index5+')" class="validate[required,custom[number]] input form-control" value="0" id="price'+index5+'" name="price'+index5+'" /><input type="hidden" id="oldprice_'+index5+'" name="oldprice_'+index5+'"/></td>';
+	
 	template+='<td  width="5%"><input type="text" onkeyup="calculatePrice('+index5+')" value="0" id="dis_value'+index5+'" name="dis_value'+index5+'" class="form-control" /><input type="hidden" id="olddis_value_'+index5+'" name="olddis_value_'+index5+'"/><input type="hidden" readonly="readonly" class="input70px" id="real-value'+index5+'" name="real-value'+index5+'" /></td>';
-	template+='<td ><input type="text" class="form-control" readonly="readonly" id="total'+index5+'" name="total'+index5+'" /></span></td>';
+	template+='<td><input type="text" class="form-control" readonly="readonly" id="total'+index5+'" name="total'+index5+'" /></span></td>';
 	template+="</tr>";
 	$('#table_order').append(template);
 	if($('#identity').val()!="") {
@@ -469,34 +466,30 @@ function addtermcondition(t_id){
 <?php $url_qty =  $this->url(array('module'=>'purchase','controller'=>'index','action'=>'getqtybyid')); ?>
 function getQtyById(index){//use
 				item_id=$("#item_id_"+index).val();
-				qty_unit=$("#qty_unit_"+index).val();
-				qty_per_unit=$("#qty_per_unit_"+index).val();
+				//qty_unit=$("#qty_unit_"+index).val();
+				//qty_per_unit=$("#qty_per_unit_"+index).val();
 				branch_id = $("#branch_id").val();
 				if(branch_id=='' || branch_id==-1){alert("Please Select Branch First ");}
-				if(qty_unit==null || qty_unit==""){
-					if(qty_per_unit!==null && qty_per_unit!==""){
-						$("#qty"+index).val(qty_per_unit);
-					}
-				}else{
+				
 					$.ajax({
 						url:"<?php echo $url_qty;?>",
 						type:"post",
 						data:{'item_id':item_id,'branch_id':branch_id},
 						success: function(data){
 							item_qty = $.parseJSON(data);			
-							main_qty =$("#qty_unit_"+index).val();
-							detail_qty =  $("#qty_per_unit_"+index).val();
+							//main_qty =$("#qty_unit_"+index).val();
+							//detail_qty =  $("#qty_per_unit_"+index).val();
 							$("#current_qty"+index).val(item_qty.qty);
-							total_qty = parseFloat(main_qty) + parseFloat(detail_qty/(item_qty.qty_perunit));
-							$("#qty"+index).val(total_qty.toFixed(3));
+							//total_qty = parseFloat(main_qty) + parseFloat(detail_qty/(item_qty.qty_perunit));
+							//$("#qty"+index).val(total_qty.toFixed(3));
 							//calculatePrice(index);
-							getProductPrice(item_id,index);
+							//getProductPrice(item_id,index);
 						},
 						error:function(e){
 							//alert(e);
 						}
 				});
-			}
+			
 }
 <?php $url_price =  $this->url(array('module'=>'sales','controller'=>'index','action'=>'getproductprice')); ?>
 function getProductPrice(product_id,recordid){
@@ -624,9 +617,10 @@ function totalQty(index){
 function calculatePrice(index) {
 	var qty = $('#qty'+index).val();
 	var price = $('#price'+index).val();
-	var total = price * qty;
+	var total = parseFloat(price) * parseFloat(qty);
 	//alert("total then aftet discount"+total);
-	var ds = $('#dis_value'+index).val();
+	ds = $('#dis_value'+index).val();
+	//alert(total);
 	if(ds.length!=0){
 		if(ds.indexOf("%")!==-1){//if have %
 			var pds=ds.split("%");
