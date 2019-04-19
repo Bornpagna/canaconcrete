@@ -1,2 +1,7 @@
 language: php
-php: 5.5
+php: 
+  - 5.5
+  - nightly
+before_script:
+# In case of timeouts and build failures you may want to prepend 'travis_retry' to the following commands:
+  - composer install -n
